@@ -8,21 +8,23 @@
 </head>
 <body>
     <div id="pencalonanPage" class="container">
-        <img src="images/Logo Mainpp.png" alt="Masjid Logo" class="logo">
-        <h1>Tarikh Cadangan</h1>
+    <img src="images/Logo Mainpp.png" alt="Masjid Logo" class="logo">
+    <h1>Tarikh Cadangan</h1>
+    <form id="pencalonanForm" action="solat_temp.sql" method="POST">
         <label for="calendar">Pilih Tarikh:</label>
-        <input type="date" id="calendar" class="calendar">
+        <input type="date" id="calendar" name="tarikh" class="calendar" required>
 
-        <div id="formSection">
+        <div id="formSection" style="display: none;">
             <label for="time">Masa:</label>
-            <input type="time" id="time">
+            <input type="time" id="time" name="masa" required>
 
             <label for="venue">Tempat:</label>
-            <input type="text" id="venue" placeholder="Masukkan tempat">
+            <input type="text" id="venue" name="tempat" placeholder="Masukkan tempat" required>
 
-            <button id="submitButton">Submit</button>
+            <button type="submit" id="submitButton">Submit</button>
         </div>
-    </div>
-    <script src="static/js/Pencalonan.js"></script>
+    </form>
+</div>
+<script src="static/js/Pencalonan.js"></script>
 </body>
 </html>
