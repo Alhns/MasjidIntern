@@ -1,29 +1,39 @@
 <?php
-session_start();
-$host = "localhost";
-$dbUsername = "root";
-$dbPassword = "";
-$dbName = "users_db";
+// Database connection settings
+$host = 'localhost';
+$dbname = 'your_database';
+$username = 'your_db_user';
+$password = 'your_db_password';
 
-// Connect to database
-$conn = new mysqli($host, $dbUsername, $dbPassword, $dbName);
+try {
+    // Connect to the database
+    $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+    // Check if form is submitted
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
+        $user = $_POST['username'];
+        $pass = $_POST['password'];
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+        // Query to check for the username
+        $stmt = $conn->prepare("SELECT * FROM users WHERE username = :username");
+        $stmt->bindParam(':username', $user);
+        $stmt->execute();
 
-    $sql = "SELECT * FROM users WHERE username='$username' AND password='$password'";
-    $result = $conn->query($sql);
+        // Fetch the user data
+        $userData = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($result->num_rows > 0) {
-        $_SESSION['username'] = $username;
-        echo "Login successful. Welcome, " . $username . "!";
-    } else {
-        echo "Invalid username or password.";
+        if ($userData && password_verify($pass, $userData['password'])) {
+            // Successful login
+            session_start();
+            $_SESSION['user'] = $userData['username'];
+            echo "Login successful! Welcome, " . htmlspecialchars($userData['username']) . ".";
+        } else {
+            // Invalid credentials
+            echo "Invalid username or password.";
+        }
     }
+} catch (PDOException $e) {
+    echo "Database error: " . $e->getMessage();
 }
 ?>
