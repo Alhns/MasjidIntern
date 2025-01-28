@@ -1,9 +1,9 @@
 <?php
 // Database connection settings
 $host = 'localhost';
-$dbname = 'your_database';
-$username = 'your_db_user';
-$password = 'your_db_password';
+$dbname = 'solat';
+$username = 'root';
+$password = '';
 
 try {
     // Connect to the database
@@ -16,7 +16,7 @@ try {
         $pass = $_POST['password'];
 
         // Query to check for the username
-        $stmt = $conn->prepare("SELECT * FROM users WHERE username = :username");
+        $stmt = $conn->prepare("SELECT * FROM user WHERE username = :username");
         $stmt->bindParam(':username', $user);
         $stmt->execute();
 
