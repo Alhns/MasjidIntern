@@ -28,6 +28,8 @@ try {
             session_start();
             $_SESSION['user'] = $userData['username'];
             echo "Login successful! Welcome, " . htmlspecialchars($userData['username']) . ".";
+            header("Location: test.html"); // Redirect to test.html
+            exit();
         } else {
             // Invalid credentials
             echo "Invalid username or password.";
