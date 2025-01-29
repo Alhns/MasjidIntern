@@ -1,15 +1,10 @@
 <?php
-// Database connection settings
-$host = 'localhost';
-$dbname = 'solat';
-$username = 'root';
-$password = '';
+session_start(); // Start session at the beginning
+
+// Include the database connection file
+include('connection.php');
 
 try {
-    // Connect to the database
-    $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
     // Check if form is submitted
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
         $user = $_POST['username'];
@@ -25,14 +20,14 @@ try {
 
         if ($userData && password_verify($pass, $userData['password'])) {
             // Successful login
-            session_start();
             $_SESSION['user'] = $userData['username'];
-            echo "Login successful! Welcome, " . htmlspecialchars($userData['username']) . ".";
             header("Location: test.html"); // Redirect to test.html
             exit();
         } else {
             // Invalid credentials
-            echo "Invalid username or password.";
+            $_SESSION['error'] = "Invalid username or password.";
+            header("Location: login.html"); // Redirect back to login page
+            exit();
         }
     }
 } catch (PDOException $e) {
