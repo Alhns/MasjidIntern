@@ -21,7 +21,7 @@ try {
         if ($userData && password_verify($pass, $userData['password'])) {
             // Successful login
             $_SESSION['user'] = $userData['username'];
-            header("Location: test.html"); // Redirect to test.html
+            header("Location: mainpage.html"); // Redirect to mainpage.html
             exit();
         } else {
             // Invalid credentials
