@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 28, 2025 at 05:36 PM
+-- Generation Time: Jan 31, 2025 at 01:51 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -33,7 +33,9 @@ CREATE TABLE `booking` (
   `date` date NOT NULL,
   `time` time(6) NOT NULL,
   `place` varchar(50) NOT NULL,
-  `status_code` int(1) NOT NULL
+  `status_code` int(1) NOT NULL,
+  `reg_date` datetime(6) NOT NULL DEFAULT current_timestamp(6),
+  `edit_date` timestamp(6) NOT NULL DEFAULT current_timestamp(6) ON UPDATE current_timestamp(6)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -47,6 +49,13 @@ CREATE TABLE `daerah` (
   `daerah_name` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `daerah`
+--
+
+INSERT INTO `daerah` (`daerah_id`, `daerah_name`) VALUES
+('1', 'Daerah Seberang Perai Selatan');
+
 -- --------------------------------------------------------
 
 --
@@ -56,14 +65,25 @@ CREATE TABLE `daerah` (
 CREATE TABLE `form` (
   `form_id` int(8) NOT NULL,
   `date` date NOT NULL,
-  `name` int(50) NOT NULL,
-  `ic` int(12) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `ic` varchar(12) NOT NULL,
   `phone_num` int(11) NOT NULL,
-  `address` int(50) NOT NULL,
+  `address` varchar(50) NOT NULL,
   `job` varchar(30) NOT NULL,
   `total_vote` int(4) NOT NULL,
-  `role` varchar(50) NOT NULL
+  `role` varchar(50) DEFAULT NULL,
+  `status_code` int(1) DEFAULT NULL,
+  `reg_date` datetime(6) NOT NULL DEFAULT current_timestamp(6),
+  `edit_date` timestamp(6) NOT NULL DEFAULT current_timestamp(6) ON UPDATE current_timestamp(6)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `form`
+--
+
+INSERT INTO `form` (`form_id`, `date`, `name`, `ic`, `phone_num`, `address`, `job`, `total_vote`, `role`, `status_code`, `reg_date`, `edit_date`) VALUES
+(1, '2025-01-02', 'amir haiqal', '011557854588', 1166587452, '556 bertam', 'lect', 2, 'Pengerusi', 1, '2025-01-31 20:46:51.728553', '2025-01-31 12:46:51.728553'),
+(2, '2025-01-02', 'haiqal', '035512484666', 1166587453, '558 bertam', 'teacher', 2, 'Pengerusi', 1, '2025-01-31 20:46:51.728553', '2025-01-31 12:46:51.728553');
 
 -- --------------------------------------------------------
 
@@ -88,6 +108,13 @@ CREATE TABLE `masjid` (
   `daerah_id` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `masjid`
+--
+
+INSERT INTO `masjid` (`masjid_id`, `masjid_name`, `daerah_id`) VALUES
+('1', 'Masjid  Tasek Cempedak', '1');
+
 -- --------------------------------------------------------
 
 --
@@ -102,17 +129,60 @@ CREATE TABLE `user` (
   `masjid_id` varchar(20) NOT NULL,
   `ic` varchar(30) NOT NULL,
   `phone` int(11) NOT NULL,
+  `address` varchar(50) NOT NULL,
+  `job` varchar(30) DEFAULT NULL,
   `level_id` int(1) NOT NULL,
-  `booking_id` int(8) NOT NULL,
-  `form_id` int(8) NOT NULL
+  `reg_date` datetime(6) NOT NULL DEFAULT current_timestamp(6),
+  `edit_date` timestamp(6) NULL DEFAULT current_timestamp(6) ON UPDATE current_timestamp(6)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`user_id`, `username`, `pswd`, `name`, `masjid_id`, `ic`, `phone`, `level_id`, `booking_id`, `form_id`) VALUES
-(2001, 'amir', 'amir2', 'amir haiqal', '1', '0115578545888', 1166587452, 1, 1, 1);
+INSERT INTO `user` (`user_id`, `username`, `pswd`, `name`, `masjid_id`, `ic`, `phone`, `address`, `job`, `level_id`, `reg_date`, `edit_date`) VALUES
+(2001, 'amir', 'amir2', 'amir haiqal', '1', '0115578545888', 1166587452, '', NULL, 1, '0000-00-00 00:00:00.000000', NULL),
+(2002, 'fairus', 'fairus2', 'fairus', '1', '024457956548', 1166587453, '556 jalan atira', NULL, 1, '0000-00-00 00:00:00.000000', NULL);
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `booking`
+--
+ALTER TABLE `booking`
+  ADD PRIMARY KEY (`booking_id`);
+
+--
+-- Indexes for table `daerah`
+--
+ALTER TABLE `daerah`
+  ADD PRIMARY KEY (`daerah_id`);
+
+--
+-- Indexes for table `form`
+--
+ALTER TABLE `form`
+  ADD PRIMARY KEY (`form_id`);
+
+--
+-- Indexes for table `level`
+--
+ALTER TABLE `level`
+  ADD PRIMARY KEY (`level_id`);
+
+--
+-- Indexes for table `masjid`
+--
+ALTER TABLE `masjid`
+  ADD PRIMARY KEY (`masjid_id`);
+
+--
+-- Indexes for table `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`user_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
