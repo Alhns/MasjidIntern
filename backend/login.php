@@ -31,6 +31,7 @@ if (isset($_POST['login'])) {
             $_SESSION['username'] = $user['username'];
             $_SESSION['ulevel'] = $user['level_id'];
             $_SESSION['user_id'] = $user['user_id']; // Ensure 'user_id' column exists in the database
+            $_SESSION['masjid_id'] = $user['masjid_id'];
 
             // Redirect based on user level
             switch ($user['level_id']) {
