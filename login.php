@@ -1,36 +1,58 @@
 <?php
-session_start(); // Start session at the beginning
+// Initialize session
+session_start();
 
-// Include the database connection file
-include('connection.php');
+// Include database connection settings
+require '../backend/connection.php'; // Ensure this file exists and connects correctly
 
-try {
-    // Check if form is submitted
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
-        $user = $_POST['username'];
-        $pass = $_POST['password'];
+if (isset($_POST['login'])) {
 
-        // Query to check for the username
-        $stmt = $conn->prepare("SELECT * FROM user WHERE username = :username");
-        $stmt->bindParam(':username', $user);
+    // Capture values from the HTML form
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    try {
+        // Prepare the SQL statement (No hashing, matches plaintext)
+        $sql = "SELECT * FROM user WHERE username = :username AND pswd = :password";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':password', $password); // Note: This is NOT secure
+
+        // Execute the query
         $stmt->execute();
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Fetch the user data
-        $userData = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($userData && password_verify($pass, $userData['password'])) {
-            // Successful login
-            $_SESSION['user'] = $userData['username'];
-            header("Location: mainpage.html"); // Redirect to mainpage.html
+        if (!$user) {
+            // Redirect if login fails
+            header('Location: ../frontend/login.html');
             exit();
         } else {
-            // Invalid credentials
-            $_SESSION['error'] = "Invalid username or password.";
-            header("Location: login.html"); // Redirect back to login page
+            // Set session variables
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['ulevel'] = $user['level_id'];
+            $_SESSION['user_id'] = $user['user_id']; // Ensure 'user_id' column exists in the database
+
+            // Redirect based on user level
+            switch ($user['level_id']) {
+                case 1:
+                    header('Location: ../frontend/mainpage.html');
+                    break;
+                case 2:
+                    header('Location: ../frontend/mainpage2.html');
+                    break;
+                case 3:
+                    header('Location: ../customer');
+                    break;
+                default:
+                    header('Location: index.html');
+            }
             exit();
         }
+    } catch (PDOException $e) {
+        die("Query failed: " . $e->getMessage());
     }
-} catch (PDOException $e) {
-    echo "Database error: " . $e->getMessage();
 }
+
+// Close the connection
+$conn = null;
 ?>
