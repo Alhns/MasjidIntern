@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         $stmt->execute();
 
         $_SESSION['message'] = "Booking request submitted successfully!";
-        header("Location: ../frontend/mainpage.html");
+        header("Location: ../frontend/mainpage.php");
         exit();
     } catch (PDOException $e) {
         echo "Error: " . $e->getMessage();

@@ -43,6 +43,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
             // Clear session after successful insert
             $_SESSION['search_results'] = [];
 
+            // Redirect to another page after successful insertion
+            header("Location: mainpage.php"); // Change this to your desired page
+            exit();
+            
         } catch (PDOException $e) {
             $conn->rollBack(); // Rollback on error
             echo "<pre style='color: red;'>Error inserting data: " . $e->getMessage() . "</pre>";

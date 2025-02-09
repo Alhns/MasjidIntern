@@ -36,7 +36,7 @@ if (isset($_POST['login'])) {
             // Redirect based on user level
             switch ($user['level_id']) {
                 case 1:
-                    header('Location: ../frontend/mainpage.html');
+                    header('Location: ../backend/mainpage.php');
                     break;
                 case 2:
                     header('Location: ../frontend/mainpage2.html');

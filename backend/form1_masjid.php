@@ -9,6 +9,26 @@ if (!isset($_SESSION['search_results'])) {
     $_SESSION['search_results'] = [];
 }
 
+date_default_timezone_set('Asia/Kuala_Lumpur'); // Set timezone to GMT+8
+$current_date = date('Y-m-d'); // Get current date and time in GMT+8
+
+// Query to check if a booking exists for today
+$sql = "SELECT * FROM booking b 
+JOIN user u ON b.user_id = u.user_id
+JOIN masjid m ON u.masjid_id = m.masjid_id 
+WHERE b.date = :booking_date AND m.masjid_id = :masjid_id";
+
+$stmt = $conn->prepare($sql);
+$stmt->execute([
+    'booking_date' => $current_date,
+    'masjid_id' => $masjid_id
+]);
+$booking = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$booking) {
+    header("Location: mainpage.php");
+    exit();
+}
 // Handle search request
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search_ic'])) {
     $searchIC = trim($_POST['search_ic']);
@@ -73,25 +93,72 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search User Data by IC</title>
     <style>
+    body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            text-align: center;
+            padding: 20px;
+        }
         table {
+            width: 80%;
+            margin: auto;
             border-collapse: collapse;
-            width: 100%;
-            margin-top: 20px;
+            background: white;
         }
         th, td {
+            padding: 10px;
             border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
         }
         th {
-            background-color: #f4f4f4;
-            font-weight: bold;
+            background: #007BFF;
+            color: white;
         }
-        tr:hover {
-            background-color: #f9f9f9;
+        tr:nth-child(even) {
+            background: #f2f2f2;
         }
-        .search-section {
-            margin-bottom: 20px;
+        select {
+            padding: 5px;
+            font-size: 14px;
+        }
+        .update-btn {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: none;
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .update-btn:hover {
+            background-color: #218838;
+        }
+        .back-btn {
+            margin-top: 20px;
+            padding: 10px 15px;
+            font-size: 16px;
+            border: none;
+            background-color: #dc3545;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .back-btn:hover {
+            background-color: #c82333;
+        }   
+        button {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>

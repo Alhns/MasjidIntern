@@ -7,19 +7,6 @@ date_default_timezone_set('Asia/Kuala_Lumpur'); // Set timezone to GMT+8
 $current_date = date('Y-m-d'); // Get current date and time in GMT+8
 $masjid_id = $_SESSION['masjid_id'];
 
-// Query to check if a booking exists for today
-$sql = "SELECT * FROM booking b 
-JOIN user u ON b.user_id = u.user_id
-JOIN masjid m ON u.masjid_id = m.masjid_id 
-WHERE b.date = :booking_date AND m.masjid_id = :masjid_id";
-
-$stmt = $conn->prepare($sql);
-$stmt->execute([
-    'booking_date' => $current_date,
-    'masjid_id' => $masjid_id
-]);
-
-$booking = $stmt->fetch(PDO::FETCH_ASSOC);
 /*
 $debug_query = str_replace(
     [':booking_date', ':masjid_id'],
@@ -28,22 +15,32 @@ $debug_query = str_replace(
 );
 echo "Debug SQL Query: " . $debug_query . "<br>"; // This helps in debugging
 */
-if (!$booking) {
-    header("Location: mainpage.php");
-    exit();
-}
+
 try {
     // Define the SQL query
-    $query = "SELECT f.*, u.*, m.*
-        FROM form f 
-        JOIN user u ON u.ic = f.ic
-        JOIN masjid m ON u.masjid_id = m.masjid_id
-        WHERE DATE(f.date) = :current_date AND m.masjid_id = $masjid_id";
+    $query = "SELECT 
+    f.ic AS form_ic, 
+    f.name AS form_name, 
+    f.reg_date AS form_reg_date, 
+    f.phone_num AS form_phone, 
+    f.address AS form_address, 
+    f.job AS form_job, 
+    f.total_vote AS form_total_vote,
+    f.role AS role,
+    u.name AS user_name, 
+    u.ic AS user_ic, 
+    u.phone AS user_phone, 
+    u.address AS user_address, 
+    u.job AS user_job, 
+    m.masjid_id AS masjid_id, 
+    m.masjid_name AS masjid_name
+FROM form f 
+JOIN user u ON u.ic = f.ic
+JOIN masjid m ON u.masjid_id = m.masjid_id";
+
 
     $stmt = $conn->prepare($query);
 
-    // Bind the parameter
-    $stmt->bindParam(':current_date', $current_date, PDO::PARAM_STR);
 
  /*   // Debugging: Display the SQL query with actual values
     $debug_query = str_replace(":current_date", "'$current_date'", $query);
@@ -156,19 +153,21 @@ try {
             <th>Address</th>
             <th>Job</th>
             <th>Total Vote</th>
+            <th>Date</th>
             <th>Role</th>
         </tr>
         <?php foreach ($bookings2 as $booking): ?>
             <tr>
-                <td><?php echo htmlspecialchars($booking['name']); ?></td>
+                <td><?php echo htmlspecialchars($booking['form_name']); ?></td>
                 <td><?php echo htmlspecialchars($booking['masjid_name']); ?></td>
-                <td><?php echo htmlspecialchars($booking['ic']); ?></td>
-                <td><?php echo htmlspecialchars($booking['phone_num']); ?></td>
-                <td><?php echo htmlspecialchars($booking['address']); ?></td>
-                <td><?php echo htmlspecialchars($booking['job']); ?></td>
-                <td><?php echo htmlspecialchars($booking['total_vote']); ?></td>
+                <td><?php echo htmlspecialchars($booking['form_ic']); ?></td>
+                <td><?php echo htmlspecialchars($booking['form_phone']); ?></td>
+                <td><?php echo htmlspecialchars($booking['form_address']); ?></td>
+                <td><?php echo htmlspecialchars($booking['form_job']); ?></td>
+                <td><?php echo htmlspecialchars($booking['form_total_vote']); ?></td>
+                <td><?php echo date('Y-m-d', strtotime($booking['form_reg_date'])); ?></td>
                 <td>
-                <select name="role" onchange="updateRole(this, '<?php echo $booking['ic']; ?>')">
+                <select name="role" onchange="updateRole(this, '<?php echo $booking['user_ic']; ?>')">
                 <option value="Pengerusi" <?php echo ($booking['role'] == 'Pengerusi') ? 'selected' : ''; ?>>Pengerusi</option>
                 <option value="Naib Pengerusi" <?php echo ($booking['role'] == 'Naib Pengerusi') ? 'selected' : ''; ?>>Naib Pengerusi</option>
                 <option value="Setiausaha" <?php echo ($booking['role'] == 'Setiausaha') ? 'selected' : ''; ?>>Setiausaha</option>
@@ -179,6 +178,6 @@ try {
     </table>
 
     <!-- Back to Main Page -->
-    <a href="../backend/mainpage.php" class="back-btn">Back to Main Page</a>
+    <a href="../frontend/mainpage2.html" class="back-btn">Back to Main Page</a>
 </body>
 </html>

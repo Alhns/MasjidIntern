@@ -100,6 +100,14 @@ try {
         <a href="../frontend/choosedate.html">
             <button type="button">Mesyuarat Agung Pencalonan Jawatankuasa Kariah</button>
         </a>
+
+        <a href="../backend/form1_masjid.php">
+            <button type="button">Form 1</button>
+        </a>
+
+        <a href="../backend/form2_masjid.php">
+            <button type="button">Form 2</button>
+        </a>
     </div>
 
     <h2 style="text-align: center; margin-top: 30px;">Your Booking Status</h2>
@@ -119,7 +127,7 @@ try {
                 <tr>
                     <td><?php echo htmlspecialchars($booking['booking_id']); ?></td>
                     <td><?php echo htmlspecialchars($booking['date']); ?></td>
-                    <td><?php echo htmlspecialchars($booking['time']); ?></td>
+                    <td><?php echo date('H:i', strtotime($booking['time'])); ?></td>
                     <td><?php echo htmlspecialchars($booking['place']); ?></td>
                     <td>
                         <?php
