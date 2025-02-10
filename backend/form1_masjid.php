@@ -16,7 +16,7 @@ $current_date = date('Y-m-d'); // Get current date and time in GMT+8
 $sql = "SELECT * FROM booking b 
 JOIN user u ON b.user_id = u.user_id
 JOIN masjid m ON u.masjid_id = m.masjid_id 
-WHERE b.date = :booking_date AND m.masjid_id = :masjid_id";
+WHERE b.date = :booking_date AND m.masjid_id = :masjid_id AND b.status_code = 1 ";
 
 $stmt = $conn->prepare($sql);
 $stmt->execute([
@@ -159,7 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
         }
         button:hover {
             background-color: #0056b3;
-        }
+        }f
     </style>
 </head>
 <body>
