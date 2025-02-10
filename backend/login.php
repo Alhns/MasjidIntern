@@ -13,7 +13,11 @@ if (isset($_POST['login'])) {
 
     try {
         // Prepare the SQL statement (No hashing, matches plaintext)
-        $sql = "SELECT * FROM user WHERE username = :username AND pswd = :password";
+        $sql = "SELECT * FROM user u 
+        JOIN masjid m ON u.masjid_id = m.masjid_id
+        JOIN daerah d ON m.daerah_id = d.daerah_id 
+        WHERE u.username = :username AND u.pswd = :password";
+        
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(':username', $username);
         $stmt->bindParam(':password', $password); // Note: This is NOT secure
@@ -32,6 +36,7 @@ if (isset($_POST['login'])) {
             $_SESSION['ulevel'] = $user['level_id'];
             $_SESSION['user_id'] = $user['user_id']; // Ensure 'user_id' column exists in the database
             $_SESSION['masjid_id'] = $user['masjid_id'];
+            $_SESSION['daerah_id'] = $user['daerah_id'];
 
             // Redirect based on user level
             switch ($user['level_id']) {

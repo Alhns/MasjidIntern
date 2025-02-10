@@ -11,7 +11,7 @@ $masjid_id = $_SESSION['masjid_id'];
 $sql = "SELECT * FROM booking b 
 JOIN user u ON b.user_id = u.user_id
 JOIN masjid m ON u.masjid_id = m.masjid_id 
-WHERE b.date = :booking_date AND m.masjid_id = :masjid_id";
+WHERE b.date = :booking_date AND m.masjid_id = :masjid_id AND b.status_code = 1 ";
 
 $stmt = $conn->prepare($sql);
 $stmt->execute([
