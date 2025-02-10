@@ -38,6 +38,7 @@ try {
             padding: 10px;
             color: white;
             text-align: center;
+            position: relative;
         }
         .buttons-container {
             display: flex;
@@ -81,6 +82,18 @@ try {
         .booking-table tr:nth-child(even) {
             background: #f2f2f2;
         }
+        .cancel-btn {
+            padding: 5px 10px;
+            font-size: 14px;
+            border: none;
+            background-color: #dc3545;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .cancel-btn:hover {
+            background-color: #c82333;
+        }
     </style>
 </head>
 <body>
@@ -93,18 +106,13 @@ try {
     </div>
 
     <div class="buttons-container">
-        <!-- Button for Mesyuarat Agung Tahunan (No action) -->
         <button type="button" disabled>Mesyuarat Agung Tahunan</button>
-
-        <!-- Button for Mesyuarat Agung Pencalonan Jawatankuasa Kariah (Redirect to choosedate.html) -->
         <a href="../frontend/choosedate.html">
             <button type="button">Mesyuarat Agung Pencalonan Jawatankuasa Kariah</button>
         </a>
-
         <a href="../backend/form1_masjid.php">
             <button type="button">Form 1</button>
         </a>
-
         <a href="../backend/form2_masjid.php">
             <button type="button">Form 2</button>
         </a>
@@ -119,9 +127,11 @@ try {
             <th>Time</th>
             <th>Place</th>
             <th>Status</th>
+            <th>Comment</th>
+            <th>Action</th>
         </tr>
         <?php if (empty($bookings)): ?>
-            <tr><td colspan="5">No bookings found.</td></tr>
+            <tr><td colspan="7">No bookings found.</td></tr>
         <?php else: ?>
             <?php foreach ($bookings as $booking): ?>
                 <tr>
@@ -139,6 +149,19 @@ try {
                             echo "Rejected";
                         }
                         ?>
+                    </td>
+                    <td>
+                        <?php echo !empty($booking['comment']) ? htmlspecialchars($booking['comment']) : '-'; ?>
+                    </td>
+                    <td>
+                        <?php if ($booking['status_code'] == 0): ?>
+                            <form action="../backend/cancel_booking.php" method="POST" style="display:inline;">
+                                <input type="hidden" name="booking_id" value="<?php echo $booking['booking_id']; ?>">
+                                <button type="submit" class="cancel-btn">Cancel</button>
+                            </form>
+                        <?php else: ?>
+                            -
+                        <?php endif; ?>
                     </td>
                 </tr>
             <?php endforeach; ?>

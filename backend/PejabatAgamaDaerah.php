@@ -26,7 +26,7 @@ try {
             padding: 20px;
         }
         table {
-            width: 80%;
+            width: 90%;
             margin: auto;
             border-collapse: collapse;
             background: white;
@@ -42,9 +42,10 @@ try {
         tr:nth-child(even) {
             background: #f2f2f2;
         }
-        select {
+        select, input[type="date"], textarea {
             padding: 5px;
             font-size: 14px;
+            width: 100%;
         }
         .update-btn {
             padding: 8px 12px;
@@ -100,26 +101,34 @@ try {
             <th>Time</th>
             <th>Place</th>
             <th>Status</th>
+            <th>Comment</th>
             <th>Action</th>
         </tr>
         <?php foreach ($bookings as $booking): ?>
             <tr>
-                <td><?php echo htmlspecialchars($booking['booking_id']); ?></td>
-                <td><?php echo htmlspecialchars($booking['user_id']); ?></td>
-                <td><?php echo htmlspecialchars($booking['date']); ?></td>
-                <td><?php echo htmlspecialchars($booking['time']); ?></td>
-                <td><?php echo htmlspecialchars($booking['place']); ?></td>
-                <td>
-                    <form action="updatestatus.php" method="POST">
-                        <input type="hidden" name="booking_id" value="<?php echo $booking['booking_id']; ?>">
+                <form action="updatestatus.php" method="POST">
+                    <td><?php echo htmlspecialchars($booking['booking_id']); ?></td>
+                    <td><?php echo htmlspecialchars($booking['user_id']); ?></td>
+                    <td>
+                        <input type="date" name="date" value="<?php echo htmlspecialchars($booking['date']); ?>" required>
+                    </td>
+                    <td><?php echo htmlspecialchars($booking['time']); ?></td>
+                    <td><?php echo htmlspecialchars($booking['place']); ?></td>
+                    <td>
                         <select name="status_code">
                             <option value="0" <?php echo ($booking['status_code'] == 0) ? 'selected' : ''; ?>>Pending</option>
                             <option value="1" <?php echo ($booking['status_code'] == 1) ? 'selected' : ''; ?>>Approved</option>
                             <option value="2" <?php echo ($booking['status_code'] == 2) ? 'selected' : ''; ?>>Rejected</option>
                         </select>
+                    </td>
+                    <td>
+                        <textarea name="comment" placeholder="Enter reason if rejected"><?php echo htmlspecialchars($booking['comment']); ?></textarea>
+                    </td>
+                    <td>
+                        <input type="hidden" name="booking_id" value="<?php echo $booking['booking_id']; ?>">
                         <button type="submit" class="update-btn">Update</button>
-                    </form>
-                </td>
+                    </td>
+                </form>
             </tr>
         <?php endforeach; ?>
     </table>
