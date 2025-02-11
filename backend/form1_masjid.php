@@ -29,33 +29,73 @@ if (!$booking) {
     header("Location: mainpage.php");
     exit();
 }
+
+// Query to check if a form exists for today
+$sql = "SELECT f.*, u.name, u.ic, u.phone, u.address, u.job, u.masjid_id
+        FROM form f 
+        JOIN user u ON f.ic = u.ic
+        JOIN masjid m ON u.masjid_id = m.masjid_id 
+        WHERE DATE(f.reg_date) = :booking_date 
+        AND m.masjid_id = :masjid_id 
+        AND f.status_code = 1";
+
+$stmt = $conn->prepare($sql);
+$stmt->execute([
+    'booking_date' => $current_date,
+    'masjid_id' => $masjid_id
+]);
+$forms = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Append today's forms to search_results, avoiding duplicates
+$existingICs = array_column($_SESSION['search_results'], 'ic');
+
+foreach ($forms as &$form) {
+    if (!isset($form['total_vote'])) { 
+        $form['total_vote'] = 0; // Ensure total_vote is always set
+    }
+    if (!in_array($form['ic'], $existingICs)) {
+        $_SESSION['search_results'][] = $form;
+    }
+}
+
 // Handle search request
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search_ic'])) {
     $searchIC = trim($_POST['search_ic']);
 
     if (!empty($searchIC)) {
         try {
-            $stmt = $conn->prepare("SELECT username, pswd, name, masjid_id, ic, phone, address, job FROM user WHERE ic = :ic && masjid_id = $masjid_id");
-            $stmt->bindParam(':ic', $searchIC, PDO::PARAM_STR);
-            $stmt->execute();
+            $stmt = $conn->prepare("SELECT username, pswd, name, masjid_id, ic, phone, address, job FROM user WHERE ic = :ic");
+            $stmt->execute(['ic' => $searchIC]);
             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            // Check for duplicates before appending
-            $existingICs = array_column($_SESSION['search_results'], 'ic');
-            if (!in_array($searchIC, $existingICs)) {
+    
+            if ($results) {
                 foreach ($results as &$user) {
+                    // Check if the masjid_id is different
+                    if ($user['masjid_id'] != $masjid_id) {
+                        echo "<script>alert('Anda Bukan Ahli Qaryah');</script>";
+                        continue; // Skip adding this user
+                    }
+    
+                    // Ensure total_vote is set
                     if (!isset($user['total_vote'])) { 
-                        $user['total_vote'] = 0; // Ensure total_vote is always set
+                        $user['total_vote'] = 0;
+                    }
+    
+                    // Check for duplicates before adding
+                    $existingICs = array_column($_SESSION['search_results'], 'ic');
+                    if (!in_array($user['ic'], $existingICs)) {
+                        $_SESSION['search_results'][] = $user;
+                    } else {
+                        echo "<script>alert('Warning: This IC is already in the table!');</script>";
                     }
                 }
-                $_SESSION['search_results'] = array_merge($_SESSION['search_results'], $results);
             } else {
-                echo "<pre style='color: red;'>Warning: This IC is already in the table!</pre>";
+                echo "<script>alert('No user found with this IC!');</script>";
             }
         } catch (PDOException $e) {
-            echo "<pre style='color: red;'>Error fetching data: " . $e->getMessage() . "</pre>";
+            echo "<script>alert('Error fetching data: " . addslashes($e->getMessage()) . "');</script>";
         }
-    }
+    }    
 }
 
 // Handle total_vote update for individual users
@@ -67,20 +107,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
         if ($user['ic'] === $updateIC) {
             $user['total_vote'] = $newVote;
             break;
-        }
-    }
-}
-
-// Handle updating all votes
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
-    if (isset($_POST['votes']) && is_array($_POST['votes'])) {
-        foreach ($_POST['votes'] as $ic => $vote) {
-            foreach ($_SESSION['search_results'] as &$user) {
-                if ($user['ic'] === $ic) {
-                    $user['total_vote'] = intval($vote);
-                    break;
-                }
-            }
         }
     }
 }
@@ -217,7 +243,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
         <input type="hidden" name="users[<?php echo $row['ic']; ?>][job]" value="<?php echo $row['job']; ?>">
         <input type="hidden" name="users[<?php echo $row['ic']; ?>][total_vote]" min="1" value="<?php echo isset($row['total_vote']) ? $row['total_vote'] : '0'; ?>" required>
         <?php endforeach; ?>
-        <button type="submit" name="update_all">Update All</button>
+        <button type="submit" name="update_all">Save</button>
         </form>
     <?php else: ?>
         <p>No results found for the entered IC.</p>
