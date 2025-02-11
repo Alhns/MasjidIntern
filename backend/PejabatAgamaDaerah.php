@@ -17,7 +17,7 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Bookings</title>
+    <title>Review Bookings</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -34,6 +34,7 @@ try {
         th, td {
             padding: 10px;
             border: 1px solid #ddd;
+            text-align: center;
         }
         th {
             background: #007BFF;
@@ -42,10 +43,9 @@ try {
         tr:nth-child(even) {
             background: #f2f2f2;
         }
-        select, input[type="date"], textarea {
+        input, select, textarea {
             padding: 5px;
             font-size: 14px;
-            width: 100%;
         }
         .update-btn {
             padding: 8px 12px;
@@ -97,8 +97,10 @@ try {
         <tr>
             <th>Booking ID</th>
             <th>User ID</th>
-            <th>Date</th>
-            <th>Time</th>
+            <th>Original Date</th>
+            <th>Adjusted Date</th>
+            <th>Original Time</th>
+            <th>Adjusted Time</th>
             <th>Place</th>
             <th>Status</th>
             <th>Comment</th>
@@ -106,29 +108,34 @@ try {
         </tr>
         <?php foreach ($bookings as $booking): ?>
             <tr>
-                <form action="updatestatus.php" method="POST">
-                    <td><?php echo htmlspecialchars($booking['booking_id']); ?></td>
-                    <td><?php echo htmlspecialchars($booking['user_id']); ?></td>
-                    <td>
-                        <input type="date" name="date" value="<?php echo htmlspecialchars($booking['date']); ?>" required>
-                    </td>
-                    <td><?php echo htmlspecialchars($booking['time']); ?></td>
-                    <td><?php echo htmlspecialchars($booking['place']); ?></td>
-                    <td>
+                <td><?php echo htmlspecialchars($booking['booking_id']); ?></td>
+                <td><?php echo htmlspecialchars($booking['user_id']); ?></td>
+                <td><?php echo htmlspecialchars($booking['date']); ?></td>
+                <td>
+                    <form action="updatestatus.php" method="POST">
+                        <input type="hidden" name="booking_id" value="<?php echo $booking['booking_id']; ?>">
+                        <input type="date" name="date" value="<?php echo htmlspecialchars($booking['date']); ?>">
+                </td>
+                <td><?php echo htmlspecialchars(date('H:i', strtotime($booking['time']))); ?></td>
+                <td>
+                        <input type="time" name="time" value="<?php echo htmlspecialchars($booking['time']); ?>">
+                </td>
+                <td><?php echo htmlspecialchars($booking['place']); ?></td>
+                <td>
                         <select name="status_code">
                             <option value="0" <?php echo ($booking['status_code'] == 0) ? 'selected' : ''; ?>>Pending</option>
                             <option value="1" <?php echo ($booking['status_code'] == 1) ? 'selected' : ''; ?>>Approved</option>
                             <option value="2" <?php echo ($booking['status_code'] == 2) ? 'selected' : ''; ?>>Rejected</option>
+                            <option value="3" <?php echo ($booking['status_code'] == 3) ? 'selected' : ''; ?>>Adjusted</option>
                         </select>
-                    </td>
-                    <td>
-                        <textarea name="comment" placeholder="Enter reason if rejected"><?php echo htmlspecialchars($booking['comment']); ?></textarea>
-                    </td>
-                    <td>
-                        <input type="hidden" name="booking_id" value="<?php echo $booking['booking_id']; ?>">
+                </td>
+                <td>
+                        <textarea name="comment" rows="2" cols="20"><?php echo htmlspecialchars($booking['comment']); ?></textarea>
+                </td>
+                <td>
                         <button type="submit" class="update-btn">Update</button>
-                    </td>
-                </form>
+                    </form>
+                </td>
             </tr>
         <?php endforeach; ?>
     </table>
