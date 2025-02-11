@@ -145,8 +145,11 @@ try {
                             echo "Pending";
                         } elseif ($booking['status_code'] == 1) {
                             echo "Approved";
-                        } else {
+                        
+                        } elseif ($booking['status_code'] == 2) {
                             echo "Rejected";
+                        } else {
+                            echo "Adjusted";
                         }
                         ?>
                     </td>
