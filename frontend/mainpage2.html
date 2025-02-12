@@ -15,18 +15,19 @@
             padding: 10px;
             color: white;
             text-align: center;
+            position: relative;
         }
         .buttons-container {
             display: flex;
             justify-content: center;
             margin-top: 20px;
+            gap: 10px; /* Ensures proper spacing between buttons */
         }
         button {
             background-color: #007BFF;
             color: white;
             padding: 10px 20px;
             font-size: 16px;
-            margin: 10px;
             cursor: pointer;
             border: none;
             border-radius: 5px;
@@ -51,14 +52,20 @@
     </div>
 
     <div class="buttons-container">
-        <!-- Button for Mesyuarat Agung Tahunan (No action) -->
+        <!-- Mesyuarat Agung Tahunan (Disabled) -->
         <button type="button" disabled>Mesyuarat Agung Tahunan</button>
 
-        <!-- Button for Mesyuarat Agung Pencalonan Jawatankuasa Kariah (Redirect to choosedate.html) -->
+        <!-- Mesyuarat Agung Pencalonan Jawatankuasa Kariah -->
         <a href="../backend/PejabatAgamaDaerah.php">
             <button type="button">Mesyuarat Agung Pencalonan Jawatankuasa Kariah</button>
         </a>
 
+        <!-- Form 1 (NEW BUTTON) -->
+        <a href="../backend/form1_PTA.php">
+            <button type="button">Form 1</button>
+        </a>
+
+        <!-- Form 2 -->
         <a href="../backend/form2_PTA.php">
             <button type="button">Form 2</button>
         </a>
