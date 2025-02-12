@@ -1,29 +1,43 @@
 <?php
 session_start();
-include('../backend/connection.php'); // Include database connection
+include('connection.php');
 
-// Fetch masjid data from the database
-try {
-    $stmt = $conn->prepare("SELECT * FROM masjid ORDER BY daerah_id, masjid_id");
-    $stmt->execute();
-    $masjids = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    die("Error: " . $e->getMessage());
+// Retrieve masjid_id from URL
+$masjidID = isset($_GET['masjid_id']) ? intval($_GET['masjid_id']) : null;
+
+// Check if masjid_id is valid
+if (!$masjidID) {
+    die("Error: Masjid ID is missing or invalid.");
 }
 
-// Organize masjids by daerah_id
-$daerahs = [
-    1 => "Butterworth",
-    2 => "Seberang Perai Selatan",
-    3 => "Seberang Perai Tengah",
-    4 => "Timor Laut",
-    5 => "Barat Daya",
-    6 => "Kepala Batas"
-];
+// Get the first and last day of the current month
+$firstDay = date('Y-m-01'); // Example: 2024-02-01
+$lastDay = date('Y-m-t');   // Example: 2024-02-29
 
-$daerahMasjids = [];
-foreach ($masjids as $masjid) {
-    $daerahMasjids[$masjid['daerah_id']][] = $masjid;
+try {
+    // Get the Masjid Name
+    $stmtMasjid = $conn->prepare("SELECT masjid_name FROM masjid WHERE masjid_id = ?");
+    $stmtMasjid->execute([$masjidID]);
+    $masjidData = $stmtMasjid->fetch(PDO::FETCH_ASSOC);
+
+    if (!$masjidData) {
+        die("Error: Masjid not found.");
+    }
+    $masjidName = $masjidData['masjid_name'];
+
+    // Query to retrieve form data for the selected masjid within the current month
+    $stmt = $conn->prepare("
+        SELECT f.*, u.name, u.ic, u.phone, u.address, u.job, u.masjid_id 
+        FROM form f
+        JOIN user u ON f.ic = u.ic
+        WHERE u.masjid_id = ? 
+        AND f.date BETWEEN ? AND ?
+        ORDER BY f.date DESC
+    ");
+    $stmt->execute([$masjidID, $firstDay, $lastDay]);
+    $searchResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    die("Error fetching data: " . $e->getMessage());
 }
 ?>
 
@@ -32,95 +46,44 @@ foreach ($masjids as $masjid) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form 1 PTA</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            margin: 0;
-        }
-        .header {
-            background-color: green;
-            padding: 10px;
-            color: white;
-            text-align: center;
-        }
-        .container {
-            width: 80%;
-            margin: 20px auto;
-            text-align: center;
-        }
-        .daerah-button {
-            background-color: #007BFF;
-            color: white;
-            padding: 10px 20px;
-            font-size: 16px;
-            margin: 10px;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            display: block;
-            width: 100%;
-            text-align: left;
-        }
-        .daerah-button:hover {
-            background-color: #0056b3;
-        }
-        .masjid-list {
-            display: none;
-            background: white;
-            border: 1px solid #ddd;
-            margin-top: 5px;
-            padding: 10px;
-        }
-        .masjid-list ul {
-            list-style: none;
-            padding: 0;
-        }
-        .masjid-list li {
-            padding: 5px;
-            text-align: left;
-        }
-        .masjid-list li:hover {
-            background-color: #f2f2f2;
-            cursor: pointer;
-        }
-    </style>
-    <script>
-        function toggleMasjidList(id) {
-            var list = document.getElementById("masjid-list-" + id);
-            if (list.style.display === "none" || list.style.display === "") {
-                list.style.display = "block";
-            } else {
-                list.style.display = "none";
-            }
-        }
-    </script>
+    <link rel="stylesheet" href="../Styles/styles2.css">
+    <title>Form Data for <?php echo htmlspecialchars($masjidName); ?></title>
 </head>
 <body>
 
-    <div class="header">
-        <h1>Senarai Masjid Mengikut Daerah</h1>
-    </div>
+    <h2>Form Data for <?php echo htmlspecialchars($masjidName); ?></h2>
+    <p>Showing records from <strong><?php echo $firstDay; ?></strong> to <strong><?php echo $lastDay; ?></strong></p>
 
-    <div class="container">
-        <?php foreach ($daerahs as $id => $name): ?>
-            <button class="daerah-button" onclick="toggleMasjidList(<?php echo $id; ?>)">
-                <?php echo $name; ?>
-            </button>
-            <div class="masjid-list" id="masjid-list-<?php echo $id; ?>">
-                <ul>
-                    <?php if (!empty($daerahMasjids[$id])): ?>
-                        <?php foreach ($daerahMasjids[$id] as $masjid): ?>
-                            <li><?php echo htmlspecialchars($masjid['masjid_id'] . " - " . $masjid['masjid_name']); ?></li>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <li>No masjid available</li>
-                    <?php endif; ?>
-                </ul>
-            </div>
-        <?php endforeach; ?>
-    </div>
+    <?php if (!empty($searchResults)): ?>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>IC</th>
+                    <th>Phone</th>
+                    <th>Address</th>
+                    <th>Job</th>
+                    <th>Total Vote</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($searchResults as $row): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($row['name']); ?></td>
+                        <td><?php echo htmlspecialchars($row['ic']); ?></td>
+                        <td><?php echo htmlspecialchars($row['phone']); ?></td>
+                        <td><?php echo htmlspecialchars($row['address']); ?></td>
+                        <td><?php echo htmlspecialchars($row['job']); ?></td>
+                        <td><?php echo htmlspecialchars($row['total_vote']); ?></td>
+                        <td><?php echo htmlspecialchars($row['date']); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php else: ?>
+        <p>No records found for <?php echo htmlspecialchars($masjidName); ?> within this month.</p>
+    <?php endif; ?>
 
 </body>
 </html>

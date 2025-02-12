@@ -3,7 +3,6 @@ session_start();
 include('connection.php');
 
 $searchIC = '';
-$masjid_id = $_SESSION['masjid_id'];
 // Initialize session array if not set
 if (!isset($_SESSION['search_results'])) {
     $_SESSION['search_results'] = [];
@@ -185,7 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
         }
         button:hover {
             background-color: #0056b3;
-        }f
+        }
     </style>
 </head>
 <body>
