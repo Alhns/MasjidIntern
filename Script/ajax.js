@@ -1,5 +1,5 @@
 function updateRole(selectElement, ic) {
-    var selectedRole = selectElement.value; // Get selected role
+    var selectedRole = selectElement.value;
 
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "../backend/update_role.php", true);
@@ -7,14 +7,18 @@ function updateRole(selectElement, ic) {
 
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
-            if (xhr.status === 200) {
-                alert("Role updated successfully!"); // Success message
+            if (xhr.status === 200 && xhr.responseText.trim() === "success") { 
+                alert("Role updated successfully!");
+                
+                // Refresh the page after a short delay
+                setTimeout(function() {
+                    location.reload();
+                }, 500); // 500ms delay
             } else {
-                alert("Error updating role. Please try again."); // Error message
+                alert("Error updating role. Please try again.");
             }
         }
     };
 
-    // Send data to the server
     xhr.send("ic=" + encodeURIComponent(ic) + "&role=" + encodeURIComponent(selectedRole));
 }

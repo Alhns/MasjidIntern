@@ -59,7 +59,7 @@ try {
         </button>
 
         <button 
-            onclick="redirectToForm('form1_PTA.php', '<?php echo $masjidID; ?>')" 
+            onclick="redirectToForm('form2_PTA - Copy.php', '<?php echo $masjidID; ?>')" 
             <?php echo ($formAvailable) ? '' : 'disabled'; ?> 
             class="<?php echo ($formAvailable) ? 'active-button' : 'disabled-button'; ?>">
             Form 2
