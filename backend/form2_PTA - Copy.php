@@ -151,11 +151,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
         </form>
     </div>
 
-    <?php if (!empty($_SESSION['search_results'])): ?>
+    <?php 
+    if (!empty($_SESSION['search_results'])): ?>
         <h2>Search Results:</h2>
             <table>
                 <thead>
                     <tr>
+                        <th>No</th>
                         <th>Name</th>
                         <th>IC</th>
                         <th>Phone</th>
@@ -167,8 +169,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($_SESSION['search_results'] as $row): ?>
+
+                    <?php
+                    $counter = 1; // Initialize counter
+                    foreach ($_SESSION['search_results'] as $row): ?>
                         <tr>
+                        <td><?php echo $counter++; ?></td>
                             <td><?php echo htmlspecialchars($row['name']); ?></td>
                             <td><?php echo htmlspecialchars($row['ic']); ?></td>
                             <td><?php echo htmlspecialchars($row['phone']); ?></td>
