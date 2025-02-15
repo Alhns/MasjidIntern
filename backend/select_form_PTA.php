@@ -4,6 +4,7 @@ include('../backend/connection.php'); // Include database connection
 
 // Get the selected masjid from the URL
 $masjidName = isset($_GET['masjid']) ? htmlspecialchars($_GET['masjid']) : 'Masjid Tidak Dikenal';
+$level_id = $_SESSION['ulevel'];
 
 // Get the first and last day of the current month
 $firstDay = date('Y-m-01'); // Example: 2024-02-01
@@ -13,27 +14,39 @@ $lastDay = date('Y-m-t');   // Example: 2024-02-29
 $formAvailable = false;
 $masjidID = null;
 
-try {
-    // Query to get masjid_id and check if ANY form exists for the current month
-    $stmt = $conn->prepare("SELECT m.masjid_id, COUNT(f.ic) AS form_count
+    try {
+        if ($level_id == 2){
+            // Query to get masjid_id and check if ANY form exists for the current month
+        $stmt = $conn->prepare("SELECT m.masjid_id, COUNT(f.ic) AS form_count
         FROM masjid m
         LEFT JOIN user u ON u.masjid_id = m.masjid_id
         LEFT JOIN form f ON f.ic = u.ic AND f.date BETWEEN ? AND ?
         WHERE m.masjid_name = ?
         GROUP BY m.masjid_id");
-
-    $stmt->execute([$firstDay, $lastDay, $masjidName]);
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($result) {
-        $masjidID = $result['masjid_id'];
-        $formAvailable = $result['form_count'] > 0; // Check if any forms exist
+        }
+        else{
+                       // Query to get masjid_id and check if ANY form exists for the current month
+        $stmt = $conn->prepare("SELECT m.masjid_id, COUNT(f.ic) AS form_count
+        FROM masjid m
+        LEFT JOIN user u ON u.masjid_id = m.masjid_id
+        LEFT JOIN form f ON f.ic = u.ic AND f.date BETWEEN ? AND ?
+        WHERE m.masjid_name = ? AND f.status_code = 2
+        GROUP BY m.masjid_id");
+        }
+        
+    
+        $stmt->execute([$firstDay, $lastDay, $masjidName]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+        if ($result) {
+            $masjidID = $result['masjid_id'];
+            $formAvailable = $result['form_count'] > 0; // Check if any forms exist
+        }
+    } catch (PDOException $e) {
+        die("Error: " . $e->getMessage());
     }
-} catch (PDOException $e) {
-    die("Error: " . $e->getMessage());
-}
-?>
 
+ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,31 +57,50 @@ try {
 </head>
 <body>
 
-    <div class="popup-container-PTA">
-        <div class="popup-content-PTA">
-            <h2>Anda telah memilih:</h2>
-            <p><strong><?php echo $masjidName; ?></strong></p>
-            <p>Sila pilih form:</p>
-            
-            <!-- Redirects to form1_PTA.php and passes masjid_id -->
+<div class="popup-container-PTA">
+    <div class="popup-content-PTA">
+        <h2>Anda telah memilih:</h2>
+        <p><strong><?php echo $masjidName; ?></strong></p>
+        <p>Sila pilih form:</p>
+
+        <?php if ($level_id == 2): ?>
+            <!-- PTA Forms -->
             <button 
-            onclick="redirectToForm('form1_PTA.php', '<?php echo $masjidID; ?>')" 
-            <?php echo ($formAvailable) ? '' : 'disabled'; ?> 
-            class="<?php echo ($formAvailable) ? 'active-button' : 'disabled-button'; ?>">
-            Form 1
-        </button>
+                onclick="redirectToForm('form1_PTA.php', '<?php echo $masjidID; ?>')" 
+                <?php echo ($formAvailable) ? '' : 'disabled'; ?> 
+                class="<?php echo ($formAvailable) ? 'active-button' : 'disabled-button'; ?>">
+                Form 1 (PTA)
+            </button>
 
-        <button 
-            onclick="redirectToForm('form2_PTA - Copy.php', '<?php echo $masjidID; ?>')" 
-            <?php echo ($formAvailable) ? '' : 'disabled'; ?> 
-            class="<?php echo ($formAvailable) ? 'active-button' : 'disabled-button'; ?>">
-            Form 2
-        </button>
+            <button 
+                onclick="redirectToForm('form2_PTA - Copy.php', '<?php echo $masjidID; ?>')" 
+                <?php echo ($formAvailable) ? '' : 'disabled'; ?> 
+                class="<?php echo ($formAvailable) ? 'active-button' : 'disabled-button'; ?>">
+                Form 2 (PTA)
+            </button>
 
-            <br><br>
-            <button class="close-btn" onclick="closePopup()">Tutup</button>
-        </div>
+        <?php else: ?>
+            <!-- Non-PTA Forms -->
+            <button 
+                onclick="redirectToForm('form1_JHEPP.php', '<?php echo $masjidID; ?>')" 
+                <?php echo ($formAvailable) ? '' : 'disabled'; ?> 
+                class="<?php echo ($formAvailable) ? 'active-button' : 'disabled-button'; ?>">
+                Form 1 (Non-PTA)
+            </button>
+
+            <button 
+                onclick="redirectToForm('form2_JHEPP.php', '<?php echo $masjidID; ?>')" 
+                <?php echo ($formAvailable) ? '' : 'disabled'; ?> 
+                class="<?php echo ($formAvailable) ? 'active-button' : 'disabled-button'; ?>">
+                Form 2 (Non-PTA)
+            </button>
+        <?php endif; ?>
+
+        <br><br>
+        <button class="close-btn" onclick="closePopup()">Tutup</button>
     </div>
+</div>
+
 
     <script>
         function redirectToForm(formPage, masjidID) {

@@ -2,31 +2,26 @@
 session_start();
 include('../backend/connection.php'); // Include database connection
 
-$daerah_id = $_SESSION['daerah_id'];
-
 try {
-    // Fetch the specific daerah name of the logged-in user
-    $stmt = $conn->prepare("SELECT daerah_name FROM daerah WHERE daerah_id = :daerah_id");
-    $stmt->bindParam(':daerah_id', $daerah_id, PDO::PARAM_INT);
+    // Fetch all daerah names
+    $stmt = $conn->prepare("SELECT * FROM daerah ORDER BY daerah_id");
     $stmt->execute();
-    $daerah = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    // Fetch all masjids only for the logged-in user's daerah
+    $daerahs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Fetch all masjids along with their daerah names
     $stmt = $conn->prepare("SELECT m.*, d.daerah_name FROM masjid m
         JOIN daerah d ON m.daerah_id = d.daerah_id
-        WHERE m.daerah_id = :daerah_id
-        ORDER BY m.masjid_id");
-    $stmt->bindParam(':daerah_id', $daerah_id, PDO::PARAM_INT);
+        ORDER BY d.daerah_id, m.masjid_id");
     $stmt->execute();
     $masjids = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     die("Error: " . $e->getMessage());
 }
 
-// Initialize daerahMasjids for the logged-in user's daerah
+// Initialize daerahMasjids with all available daerah names
 $daerahMasjids = [];
-if ($daerah) {
-    $daerahMasjids[$daerah['daerah_name']] = []; // Ensure the daerah appears
+foreach ($daerahs as $daerah) {
+    $daerahMasjids[$daerah['daerah_name']] = []; // Ensure all daerahs appear
 }
 
 // Organize masjids by daerah_name

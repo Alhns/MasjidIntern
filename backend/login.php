@@ -47,7 +47,7 @@ if (isset($_POST['login'])) {
                     header('Location: ../frontend/mainpage2.html');
                     break;
                 case 3:
-                    header('Location: ../customer');
+                    header('Location: ../frontend/mainpage3.html');
                     break;
                 default:
                     header('Location: index.html');
