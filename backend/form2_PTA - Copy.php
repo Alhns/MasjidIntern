@@ -7,11 +7,11 @@ $searchIC = '';
 if (!isset($_SESSION['search_results'])) {
     $_SESSION['search_results'] = [];
 }
-
+/*
 echo "<pre>Debug Search Results:";
 print_r($_SESSION['search_results']);
 echo "</pre>";
-
+*/
 
 // Retrieve masjid_id from URL
 $masjid_id = isset($_GET['masjid_id']) ? intval($_GET['masjid_id']) : null;
@@ -39,7 +39,7 @@ $debug_sql = str_replace(
 );
 
 // Print Debug Query
-echo "<pre>Debug SQL Query: " . $debug_sql . "</pre>";
+//echo "<pre>Debug SQL Query: " . $debug_sql . "</pre>";
 
 $stmt = $conn->prepare($sql);
 $stmt->execute([
@@ -103,10 +103,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search_ic'])) {
 
 // Handle total_vote and role update for individual users
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
-
+/*
     echo "<pre>Debug POST Data:\n";
     print_r($_POST);
     echo "</pre>";
+*/
    // exit; // Stop execution to check output
 
     // Extract form_id dynamically
@@ -236,6 +237,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
     <div class="export-buttons">
     <a href="form2_PTA_pdf.php">
     <button type="button">Export to PDF</button>
+</a>
+    <a href="form2_PTA_excel.php">
+    <button type="button">Export to Excel</button>
 </a>
 </body>
 </html>
