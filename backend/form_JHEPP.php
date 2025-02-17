@@ -65,6 +65,13 @@ foreach ($masjids as $masjid) {
             </div>
         <?php endforeach; ?>
     </div>
-
+    <!-- Back Button -->
+    <div class="back-button-container" style="text-align: center; margin-top: 20px;">
+        <a href="../frontend/mainpage3.html" style="text-decoration: none;">
+            <button style="padding: 10px 20px; font-size: 16px; background-color: #007bff; color: white; border: none; cursor: pointer; border-radius: 5px;">
+                ⬅ Back to Main Page
+            </button>
+        </a>
+    </div>
 </body>
 </html>

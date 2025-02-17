@@ -241,5 +241,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
     <a href="form2_PTA_excel.php">
     <button type="button">Export to Excel</button>
 </a>
+    <!-- Back Button without passing masjid_id -->
+    <button onclick="window.location.href = 'form_JHEPP.php'">Back</button>
 </body>
 </html>
