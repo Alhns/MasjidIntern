@@ -115,11 +115,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
     $newVote = intval($_POST['total_vote']);
     $newRole = $_POST['role']; // Get selected role
 
-    // Debug: Check if values are being received
+    /* Debug: Check if values are being received
     echo "<pre>Debug Update Form ID: " . $updateform . "</pre>";
     echo "<pre>Debug New Vote Count: " . $newVote . "</pre>";
     echo "<pre>Debug New Role: " . $newRole . "</pre>";
-
+*/
     // Update total_vote and role in the session array
     foreach ($_SESSION['search_results'] as &$user) {
         if ($user['form_id'] == $updateform || $user['ic'] == $_POST['users'][$updateform]['ic']) { 
@@ -222,6 +222,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
         <?php $key = isset($row['form_id']) ? $row['form_id'] : $row['ic']; ?>
             <input type="hidden" name="users[<?php echo $key; ?>][ic]" value="<?php echo htmlspecialchars($row['ic']); ?>">
             <input type="hidden" name="users[<?php echo $key; ?>][name]" value="<?php echo htmlspecialchars($row['name']); ?>">
+            <input type="hidden" name="users[<?php echo $key; ?>][reg_date]" value="<?php echo htmlspecialchars($row['reg_date']); ?>">
             <input type="hidden" name="users[<?php echo $key; ?>][masjid_id]" value="<?php echo htmlspecialchars($row['masjid_id']); ?>">
             <input type="hidden" name="users[<?php echo $key; ?>][phone]" value="<?php echo htmlspecialchars($row['phone']); ?>">
             <input type="hidden" name="users[<?php echo $key; ?>][address]" value="<?php echo htmlspecialchars($row['address']); ?>">
