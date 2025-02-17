@@ -42,7 +42,7 @@ foreach ($masjids as $masjid) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Senarai Masjid Mengikut Daerah</title>
     <link rel="stylesheet" href="../Styles/styles.css">
-    <script src="<?php echo '../Script/dropdown_pta.js'; ?>"></script>
+    <script src="../Script/dropdown_pta.js"></script>
 </head>
 <body>
 
@@ -60,8 +60,8 @@ foreach ($masjids as $masjid) {
                     <?php if (!empty($masjids)): ?>
                         <?php foreach ($masjids as $masjid): ?>
                             <li onclick="openFormSelection('<?php echo htmlspecialchars($masjid['masjid_name']); ?>')">
-                            <?php echo htmlspecialchars($masjid['masjid_id'] . " - " . $masjid['masjid_name']); ?>
-                        </li>
+                                <?php echo htmlspecialchars($masjid['masjid_id'] . " - " . $masjid['masjid_name']); ?>
+                            </li>
                         <?php endforeach; ?>
                     <?php else: ?>
                         <li>No masjid available</li>
@@ -69,6 +69,15 @@ foreach ($masjids as $masjid) {
                 </ul>
             </div>
         <?php endforeach; ?>
+    </div>
+
+    <!-- Back Button -->
+    <div class="back-button-container" style="text-align: center; margin-top: 20px;">
+        <a href="../frontend/mainpage2.html" style="text-decoration: none;">
+            <button style="padding: 10px 20px; font-size: 16px; background-color: #007bff; color: white; border: none; cursor: pointer; border-radius: 5px;">
+                ⬅ Back to Main Page
+            </button>
+        </a>
     </div>
 
 </body>

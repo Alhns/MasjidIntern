@@ -31,7 +31,7 @@ try {
         FROM form f
         JOIN user u ON f.ic = u.ic
         WHERE u.masjid_id = ? 
-        AND f.date BETWEEN ? AND ?
+        AND f.date BETWEEN ? AND ? 
         ORDER BY f.date DESC
     ");
     $stmt->execute([$masjidID, $firstDay, $lastDay]);
@@ -85,5 +85,7 @@ try {
         <p>No records found for <?php echo htmlspecialchars($masjidName); ?> within this month.</p>
     <?php endif; ?>
 
+        <!-- Back Button without passing masjid_id -->
+        <button onclick="window.location.href = 'form_PTA.php'">Back</button>
 </body>
 </html>

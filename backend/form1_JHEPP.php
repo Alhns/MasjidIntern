@@ -84,6 +84,7 @@ try {
     <?php else: ?>
         <p>No records found for <?php echo htmlspecialchars($masjidName); ?> within this month.</p>
     <?php endif; ?>
-
+    <!-- Back Button without passing masjid_id -->
+    <button onclick="window.location.href = 'form_JHEPP.php'">Back</button>
 </body>
 </html>

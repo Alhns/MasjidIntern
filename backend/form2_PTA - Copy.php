@@ -235,15 +235,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
     <?php else: ?>
         <p>No results found for the entered date.</p>
     <?php endif; ?>
-<!--
-<div class="export-buttons">
-    <a href="form2_PTA_pdf.php">
+    <div class="export-buttons">
+    <a href="form2_PTA_pdf.php" target="_blank">
         <button type="button">Export to PDF</button>
     </a>
     <a href="form2_PTA_excel.php">
-        <button type="button">Export to Excel</button>
-    </a>
-</div>
--->
+    <button type="button">Export to Excel</button>
+</a>
+    <!-- Back Button without passing masjid_id -->
+    <button onclick="window.location.href = 'form_PTA.php'">Back</button>
 </body>
 </html>
