@@ -2,46 +2,33 @@
 session_start();
 include('connection.php');
 
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Choose Date</title>
-    <style>
-        .form-card {
-            background-color: #f8f9fa;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
-    </style>
-</head>
-<body>
-<?php require '../include/header.php'; ?>
-<div class="container mt-5">
-        <div class="card form-card mx-auto" style="max-width: 500px;">
-            <h2 class="text-center mb-4">Choose Date for Meeting</h2>
-            <form action="../backend/choosedate.php" method="POST">
-                <div class="mb-3">
-                    <label for="date" class="form-label">Select Date:</label>
-                    <input type="date" id="date" name="date" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label for="time" class="form-label">Select Time:</label>
-                    <input type="time" id="time" name="time" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label for="place" class="form-label">Enter Place:</label>
-                    <input type="text" id="place" name="place" class="form-control" required>
-                </div>
-                <div class="text-center">
-                    <button type="submit" name="submit" class="btn btn-primary mt-3">Submit</button>
-                </div>
-            </form>
-        </div>
-    </div>
+if (!isset($_SESSION['user_id'])) {
+    die("Error: User not logged in."); // Debug message
+}
 
-</body>
-</html>
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
+    $user_id = $_SESSION['user_id']; // Now it should be set
+    $date = $_POST['date'];
+    $time = $_POST['time'];
+    $place = $_POST['place'];
+    $status_code = 'pending';
+    $masjid_id = $_SESSION['masjid_id'];
+
+    try {
+        $stmt = $conn->prepare("INSERT INTO booking (user_id, date, time, place, status_code, masjid_id) VALUES (:user_id, :date, :time, :place, :status_code, :masjid_id)");
+        $stmt->bindParam(':user_id', $user_id);
+        $stmt->bindParam(':date', $date);
+        $stmt->bindParam(':time', $time);
+        $stmt->bindParam(':place', $place);
+        $stmt->bindParam(':status_code', $status_code);
+        $stmt->bindParam(':masjid_id', $masjid_id);
+        $stmt->execute();
+
+        $_SESSION['message'] = "Booking request submitted successfully!";
+        header("Location: ../backend/mainpage.php");
+        exit();
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
+    }
+}
+?>
