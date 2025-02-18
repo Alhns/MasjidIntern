@@ -76,7 +76,7 @@ try {
     <a href="choosedate.php" class="mb-2">
         <button type="button" class="btn btn-primary">Mesyuarat Agung Pencalonan Jawatankuasa Kariah</button>
     </a>
-    <a href="../backend/form1_masjid.php" class="mb-2">
+    <a href="../backend/form1_masjid.php" class="mb-2 ml-2">
         <button type="button" class="btn btn-primary">Form 1</button>
     </a>
     <a href="../backend/form2_masjid.php">
@@ -128,7 +128,8 @@ try {
                         <?php if ($booking['status_code'] == 0): ?>
                             <form action="../backend/cancel_booking.php" method="POST">
                                 <input type="hidden" name="booking_id" value="<?php echo $booking['booking_id']; ?>">
-                                <button type="submit" class="cancel-btn">Cancel</button>
+                                <button type="submit" class="btn btn-danger px-4 py-2 fw-bold rounded">Cancel</button>
+
                             </form>
                         <?php else: ?>
                             -
@@ -139,7 +140,7 @@ try {
         <?php endif; ?>
     </table>
 
-    <h1 style="text-align: center; margin-top: 30px;">Form 1</h1>
+    <h2 style="text-align: center; margin-top: 30px;">Form 1</h2>
 
     <?php if (!empty($forms)): ?>
         

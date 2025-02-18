@@ -45,7 +45,7 @@ foreach ($masjids as $masjid) {
     <script src="../Script/dropdown_pta.js"></script>
 </head>
 <body>
-
+<?php require '../include/header.php'; ?>
     <div class="header">
         <h1>Senarai Masjid Mengikut Daerah</h1>
     </div>
@@ -71,12 +71,12 @@ foreach ($masjids as $masjid) {
 
     <!-- Back Button -->
     <div class="back-button-container" style="text-align: center; margin-top: 20px;">
-        <a href="../frontend/mainpage2.html" style="text-decoration: none;">
+        <a href="../backend/mainpage2.php" style="text-decoration: none;">
             <button style="padding: 10px 20px; font-size: 16px; background-color: #007bff; color: white; border: none; cursor: pointer; border-radius: 5px;">
                 ⬅ Back to Main Page
             </button>
         </a>
     </div>
-
+    <?php require '../include/footer.php'; ?>
 </body>
 </html>

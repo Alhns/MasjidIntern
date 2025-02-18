@@ -46,25 +46,33 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../Styles/styles2.css">
     <title>Form Data for <?php echo htmlspecialchars($masjidName); ?></title>
 </head>
 <body>
+<?php require '../include/header.php'; ?>
 
+<div class="text-center mt-3">
     <h2>Form Data for <?php echo htmlspecialchars($masjidName); ?></h2>
     <p>Showing records from <strong><?php echo $firstDay; ?></strong> to <strong><?php echo $lastDay; ?></strong></p>
+</div>
+
 
     <?php if (!empty($searchResults)): ?>
         <table>
             <thead>
+            <div class="table-responsive">
+        <table class="table table-bordered text-center">
+            <thead class="table-primary text-white">
                 <tr>
                     <th>Name</th>
                     <th>IC</th>
-                    <th>Phone</th>
+                    <th>Phone Number</th>
                     <th>Address</th>
                     <th>Job</th>
                     <th>Total Vote</th>
                     <th>Date</th>
+                </thead>
+                <tbody>
                 </tr>
             </thead>
             <tbody>
@@ -84,7 +92,10 @@ try {
     <?php else: ?>
         <p>No records found for <?php echo htmlspecialchars($masjidName); ?> within this month.</p>
     <?php endif; ?>
-    <!-- Back Button without passing masjid_id -->
-    <button onclick="window.location.href = 'form_JHEPP.php'">Back</button>
+    <div class="text-center mt-3">
+    <button onclick="window.location.href = 'form_JHEPP.php'" class="btn btn-primary">Back</button>
+</div>
+
+    <?php require '../include/footer.php'; ?>
 </body>
 </html>

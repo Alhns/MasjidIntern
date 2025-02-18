@@ -23,65 +23,10 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Review Bookings</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            text-align: center;
-            padding: 20px;
-        }
-        table {
-            width: 90%;
-            margin: auto;
-            border-collapse: collapse;
-            background: white;
-        }
-        th, td {
-            padding: 10px;
-            border: 1px solid #ddd;
-            text-align: center;
-        }
-        th {
-            background: #007BFF;
-            color: white;
-        }
-        tr:nth-child(even) {
-            background: #f2f2f2;
-        }
-        input, select, textarea {
-            padding: 5px;
-            font-size: 14px;
-        }
-        .update-btn {
-            padding: 8px 12px;
-            font-size: 14px;
-            border: none;
-            background-color: #28a745;
-            color: white;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        .update-btn:hover {
-            background-color: #218838;
-        }
-        .back-btn {
-            margin-top: 20px;
-            padding: 10px 15px;
-            font-size: 16px;
-            border: none;
-            background-color: #dc3545;
-            color: white;
-            cursor: pointer;
-            border-radius: 5px;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .back-btn:hover {
-            background-color: #c82333;
-        }
-    </style>
 </head>
 <body>
+<?php require '../include/header.php'; ?>
+
 
     <!-- Show Alert Message (if any) -->
     <?php
@@ -96,9 +41,11 @@ try {
     }
     ?>
 
-    <h2>Booking List</h2>
+    <h2 class="text-center mt-4">Booking List</h2>
 
-    <table>
+    <div class="table-responsive">
+    <table class="table table-bordered text-center">
+    <thead class="table-primary text-white">
     <tr>
         <th>Booking ID</th>
         <th>User ID</th>
@@ -111,6 +58,7 @@ try {
         <th>Comment</th>
         <th>Masjid Name</th>
         <th>Action</th>
+</thead>
     </tr>
     <?php foreach ($bookings as $booking): ?>
         <tr>
@@ -140,15 +88,18 @@ try {
             </td>
             <td><?php echo htmlspecialchars($booking['masjid_name']); ?></td> <!-- Display masjid name -->
             <td>
-                    <button type="submit" class="update-btn">Update</button>
+                    <button type="submit" class="btn btn-primary mb-2">Update</button>
                 </form>
             </td>
         </tr>
     <?php endforeach; ?>
 </table>
 
-    <!-- Back to Main Page -->
-    <a href="../frontend/mainpage2.html" class="back-btn">Back to Main Page</a>
+<div class="text-center mt-3">
+    <a href="../backend/mainpage2.php" class="btn btn-primary mb-2">Back to Main Page</a>
+</div>
+
+    <?php require '../include/footer.php'; ?>
 
 </body>
 </html>

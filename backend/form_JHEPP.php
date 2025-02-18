@@ -40,37 +40,39 @@ foreach ($masjids as $masjid) {
     <script src="<?php echo '../Script/dropdown_pta.js'; ?>"></script>
 </head>
 <body>
-
 <?php require '../include/header.php'; ?>
-        
+    <div class="header">
+        <h1>Senarai Masjid Mengikut Daerah</h1>
+    </div>
+
+    <div class="container">
         <?php foreach ($daerahMasjids as $daerahName => $masjids): ?>
-            <div class="mb-3">
-                <button class="btn btn-primary w-100 mt-2 text-start" onclick="toggleMasjidList('<?php echo htmlspecialchars($daerahName); ?>')">
-                    <?php echo htmlspecialchars($daerahName); ?>
-                </button>
-                <div class="masjid-list" id="masjid-list-<?php echo htmlspecialchars($daerahName); ?>" style="display: none;">
-                    <ul class="list-group mt-2">
-                        <?php if (!empty($masjids)): ?>
-                            <?php foreach ($masjids as $masjid): ?>
-                                <li class="list-group-item list-group-item-action" onclick="openFormSelection('<?php echo htmlspecialchars($masjid['masjid_name']); ?>')">
-                                    <?php echo htmlspecialchars($masjid['masjid_id'] . " - " . $masjid['masjid_name']); ?>
-                                </li>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <li class="list-group-item">No masjid available</li>
-                        <?php endif; ?>
-                    </ul>
-                </div>
+            <button class="daerah-button" onclick="toggleMasjidList('<?php echo htmlspecialchars($daerahName); ?>')">
+                <?php echo htmlspecialchars($daerahName); ?>
+            </button>
+            <div class="masjid-list" id="masjid-list-<?php echo htmlspecialchars($daerahName); ?>">
+                <ul>
+                    <?php if (!empty($masjids)): ?>
+                        <?php foreach ($masjids as $masjid): ?>
+                            <li onclick="openFormSelection('<?php echo htmlspecialchars($masjid['masjid_name']); ?>')">
+                            <?php echo htmlspecialchars($masjid['masjid_id'] . " - " . $masjid['masjid_name']); ?>
+                        </li>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <li>No masjid available</li>
+                    <?php endif; ?>
+                </ul>
             </div>
         <?php endforeach; ?>
-
-        <!-- Back Button -->
-        <div class="text-center mt-4">
-            <a href="../backend/mainpage3.php" class="btn btn-secondary"> Back to Main Page</a>
-        </div>
     </div>
+    <!-- Back Button -->
+    <div class="back-button-container" style="text-align: center; margin-top: 20px;">
+        <a href="../backend/mainpage3.php" style="text-decoration: none;">
+            <button style="padding: 10px 20px; font-size: 16px; background-color: #007bff; color: white; border: none; cursor: pointer; border-radius: 5px;">
+                ⬅ Back to Main Page
             </button>
         </a>
     </div>
+    <?php require '../include/footer.php'; ?>
 </body>
 </html>
