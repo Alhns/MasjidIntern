@@ -49,6 +49,9 @@ if (isset($_POST['login'])) {
                 case 3:
                     header('Location: ../backend/mainpage3.php');
                     break;
+                case 4:
+                    header('Location: ../backend/mainpage4.php');
+                    break;
                 default:
                     header('Location: index.html');
             }

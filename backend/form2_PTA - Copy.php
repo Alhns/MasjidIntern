@@ -7,6 +7,8 @@ $searchIC = '';
 if (!isset($_SESSION['search_results'])) {
     $_SESSION['search_results'] = [];
 }
+
+
 /*
 echo "<pre>Debug Search Results:";
 print_r($_SESSION['search_results']);

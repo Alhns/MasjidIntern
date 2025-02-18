@@ -1,7 +1,7 @@
 <?php
 session_start();
 include('connection.php');
-
+$level_id = $_SESSION['ulevel'];
 $searchIC = '';
 // Initialize session array if not set
 if (!isset($_SESSION['search_results'])) {
@@ -180,6 +180,9 @@ foreach ($_SESSION['search_results'] as &$user) {
                         <th>Total Vote</th>
                         <th>Role</th>
                         <th>Action</th>
+                        <?php if ($level_id == 4): ?>
+                <th>Accept / Reject</th>
+            <?php endif; ?>
                         </thead>
                         <tbody>
                     </tr>
@@ -222,7 +225,23 @@ foreach ($_SESSION['search_results'] as &$user) {
     <td>
     <button type="submit" name="update_vote" class="btn btn-primary mb-2" value="1">Update Role</button>
     </form>
-</td>
+    </td>
+    <td>
+    <?php
+if ($level_id == 4) {
+    ?>
+    <form action="your_update_script.php" method="POST" style="display: inline;">
+        <button type="submit" name="update_vote" class="btn btn-success mb-2" value="1">Accept</button>
+    </form>
+
+    <!-- Reject Button -->
+    <form action="your_update_script.php" method="POST" style="display: inline;">
+        <button type="submit" name="update_vote" class="btn btn-danger mb-2" value="0">Reject</button>
+    </form>
+    <?php
+}
+?>
+
 
                                 </tr>
                            
@@ -255,7 +274,7 @@ foreach ($_SESSION['search_results'] as &$user) {
     <a href="form2_PTA_excel.php">
         <button type="button" class="btn btn-primary mb-2">Export to Excel</button>
     </a>
-    <button onclick="window.location.href = 'form_PTA.php'" class="btn btn-primary mb-2">Back</button>
+    <button onclick="window.location.href = 'form_JHEPP.php'" class="btn btn-primary mb-2">Back</button>
 </div>
     <?php require '../include/footer.php'; ?>
 </body>

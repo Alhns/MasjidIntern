@@ -65,7 +65,7 @@ foreach ($masjids as $masjid) {
 
         <!-- Back Button -->
         <div class="text-center mt-4">
-            <a href="../frontend/mainpage3.html" class="btn btn-secondary"> Back to Main Page</a>
+            <a href="../backend/mainpage3.php" class="btn btn-secondary"> Back to Main Page</a>
         </div>
     </div>
 
