@@ -38,7 +38,8 @@ try {
         FROM form f 
         JOIN user u ON u.ic = f.ic
         JOIN masjid m ON u.masjid_id = m.masjid_id
-        WHERE DATE(f.date) = :current_date AND m.masjid_id = $masjid_id";
+        WHERE DATE(f.date) = :current_date AND m.masjid_id = $masjid_id
+        ORDER BY f.total_vote DESC LIMIT 10";
 
     $stmt = $conn->prepare($query);
 

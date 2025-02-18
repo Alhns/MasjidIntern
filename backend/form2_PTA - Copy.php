@@ -110,24 +110,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
 */
    // exit; // Stop execution to check output
 
-    // Extract form_id dynamically
-    $updateform = key($_POST['users']); // Get the first key in the users array
-    $newVote = intval($_POST['total_vote']);
-    $newRole = $_POST['role']; // Get selected role
+// Extract the first key in the users array (which is the IC number)
+$updateKey = key($_POST['users']); 
 
-    // Debug: Check if values are being received
- /*   echo "<pre>Debug Update Form ID: " . $updateform . "</pre>";
-    echo "<pre>Debug New Vote Count: " . $newVote . "</pre>";
-    echo "<pre>Debug New Role: " . $newRole . "</pre>";
+// Use form_id if it exists, otherwise use IC to prevent errors
+$updateform = $_POST['users'][$updateKey]['form_id'] ?? $updateKey;
+
+
+$newVote = intval($_POST['total_vote']);
+$newRole = $_POST['role']; // Get selected role
+
+// Debugging
+/*
+echo "<pre>Debug Update Form ID (or IC as fallback): " . $updateform . "</pre>";
+echo "<pre>Debug New Vote Count: " . $newVote . "</pre>";
+echo "<pre>Debug New Role: " . $newRole . "</pre>";
 */
-    // Update total_vote and role in the session array
-    foreach ($_SESSION['search_results'] as &$user) {
-        if ($user['form_id'] == $updateform || $user['ic'] == $_POST['users'][$updateform]['ic']) { 
-            $user['total_vote'] = $newVote;
-            $user['role'] = $newRole;
-            break;
-        }
+
+// Update total_vote and role in the session array
+foreach ($_SESSION['search_results'] as &$user) {
+    if ((isset($user['form_id']) && $user['form_id'] == $updateform) || 
+        (isset($user['ic']) && $user['ic'] == $updateform)) {
+        $user['total_vote'] = $newVote;
+        $user['role'] = $newRole;
+        break;
     }
+}
 }
 
 
@@ -222,7 +230,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
         <?php $key = isset($row['form_id']) ? $row['form_id'] : $row['ic']; ?>
             <input type="hidden" name="users[<?php echo $key; ?>][ic]" value="<?php echo htmlspecialchars($row['ic']); ?>">
             <input type="hidden" name="users[<?php echo $key; ?>][name]" value="<?php echo htmlspecialchars($row['name']); ?>">
-            <input type="hidden" name="users[<?php echo $key; ?>][reg_date]" value="<?php echo htmlspecialchars($row['reg_date']); ?>">
+            <input type="hidden" name="users[<?php echo $key; ?>][reg_date]" value="<?php echo isset($row['reg_date']) ? htmlspecialchars($row['reg_date']) : date('Y-m-d'); ?>">
             <input type="hidden" name="users[<?php echo $key; ?>][masjid_id]" value="<?php echo htmlspecialchars($row['masjid_id']); ?>">
             <input type="hidden" name="users[<?php echo $key; ?>][phone]" value="<?php echo htmlspecialchars($row['phone']); ?>">
             <input type="hidden" name="users[<?php echo $key; ?>][address]" value="<?php echo htmlspecialchars($row['address']); ?>">

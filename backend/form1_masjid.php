@@ -8,6 +8,8 @@ if (!isset($_SESSION['search_results'])) {
     $_SESSION['search_results'] = [];
 }
 
+$masjid_id = $_SESSION['masjid_id'];
+
 date_default_timezone_set('Asia/Kuala_Lumpur'); // Set timezone to GMT+8
 $current_date = date('Y-m-d'); // Get current date and time in GMT+8
 

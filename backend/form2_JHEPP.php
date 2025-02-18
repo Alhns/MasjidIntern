@@ -230,7 +230,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
             <input type="hidden" name="users[<?php echo $key; ?>][role]" value="<?php echo isset($row['role']) ? htmlspecialchars($row['role']) : ''; ?>">
             <input type="hidden" name="users[<?php echo $key; ?>][total_vote]" value="<?php echo isset($row['total_vote']) ? htmlspecialchars($row['total_vote']) : '0'; ?>" required>
         <?php endforeach; ?>
-        <button type="submit" name="update_all">Save</button>
+        <button type="submit" name="update_all">Save and Verify</button>
         </form>
     <?php else: ?>
         <p>No results found for the entered IC.</p>

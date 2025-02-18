@@ -7,6 +7,13 @@ if (!isset($_SESSION['username'])) {
     exit();
 }
 
+date_default_timezone_set('Asia/Kuala_Lumpur'); // Set timezone to GMT+8
+// Get the first and last day of the current month
+$firstDay = date('Y-m-01'); // Example: 2024-02-01
+$lastDay = date('Y-m-t');   // Example: 2024-02-29
+
+$masjid_id = $_SESSION['masjid_id'];
+
 // Include database connection
 require '../backend/connection.php';
 
@@ -19,6 +26,43 @@ try {
 } catch (PDOException $e) {
     die("Error: " . $e->getMessage());
 }
+
+// Fetch the status of Form 2
+try {
+    $sql = "
+    SELECT f.*, 
+           u.name AS user_name, 
+           u.ic AS user_ic, 
+           u.phone AS user_phone, 
+           u.address AS user_address, 
+           u.job AS user_job, 
+           u.masjid_id, 
+           m.masjid_name, 
+           v1.name AS verify_name_1, 
+           v2.name AS verify_name_2, 
+           v3.name AS verify_name_3
+    FROM form f 
+    JOIN user u ON f.ic = u.ic
+    JOIN masjid m ON u.masjid_id = m.masjid_id 
+    LEFT JOIN user v1 ON f.verify_id_1 = v1.user_id
+    LEFT JOIN user v2 ON f.verify_id_2 = v2.user_id
+    LEFT JOIN user v3 ON f.verify_id_3 = v3.user_id
+    WHERE DATE(f.reg_date) BETWEEN :firstdate AND :lastdate
+    AND m.masjid_id = :masjid_id
+    ORDER BY f.total_vote DESC
+";
+    $stmt->execute();
+    $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    die("Error: " . $e->getMessage());
+}
+$stmt = $conn->prepare($sql);
+$stmt->execute([
+    'firstdate' => $firstDay,
+    'lastdate' => $lastDay,
+    'masjid_id' => $masjid_id
+]);
+$forms = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -170,6 +214,56 @@ try {
             <?php endforeach; ?>
         <?php endif; ?>
     </table>
+    <h1 style="text-align: center; margin-top: 30px;">Form 2 Status</h1>
+    
+    <?php if (!empty($forms)): ?>
+        <table class="booking-table">
+            <thead>
+                <tr>
+                <th>No</th>
+                <th>Name</th>
+                <th>IC</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Job</th>
+                <th>Masjid Name</th>
+                <th>Verify Name 1</th>
+                <th>Verify Name 2</th>
+                <th>Verify Name 3</th>
+                <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $counter = 1;
+                foreach ($forms as $form): 
+                    // Conditional display based on status_code
+                    $statusText = 'none';
+                    if ($form['status_code'] == 2) {
+                        $statusText = 'APPROVED BY PTA';
+                    } elseif ($form['status_code'] == 3) {
+                        $statusText = 'APPROVED BY JHEPP';
+                    }
+                ?>
+                    <tr>
+                    <td><?php echo $counter++; ?></td>
+                    <td><?php echo htmlspecialchars($form['name']); ?></td>
+                    <td><?php echo htmlspecialchars($form['ic']); ?></td>
+                    <td><?php echo htmlspecialchars($form['phone_num']); ?></td>
+                    <td><?php echo htmlspecialchars($form['address']); ?></td>
+                    <td><?php echo htmlspecialchars($form['job']); ?></td>
+                    <td><?php echo htmlspecialchars($form['masjid_name']); ?></td>
+                    <td><?php echo htmlspecialchars($form['verify_name_1']); ?></td>
+                    <td><?php echo htmlspecialchars($form['verify_name_2']); ?></td>
+                    <td><?php echo htmlspecialchars($form['verify_name_3']); ?></td>
+                    <td><?php echo $statusText; ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php else: ?>
+        <p style="text-align: center; margin-top: 30px;">No results found for the selected date range.</p>
+    <?php endif; ?>
 
 </body>
 </html>
