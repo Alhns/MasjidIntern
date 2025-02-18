@@ -11,7 +11,7 @@
     
     <!-- Header -->
     <header class="d-flex justify-content-between align-items-center p-3 bg-primary shadow">
-        <h1>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></h1>
+        <h1 text>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></h1>
     <a id="logout-btn" href="../backend/logout.php" class="btn btn-secondary">Logout</a></header>
     <div class="container">
 

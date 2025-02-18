@@ -122,77 +122,73 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
 </head>
 <body>
     <?php require '../include/header.php'; ?>
-    <div class="container d-flex flex-column align-items-center justify-content-center min-vh-100">
-    
-    <!-- Positioned absolute elements need a defined relative container -->
-    <div class="position-relative w-100">
-        <div class="position-absolute top-0 end-0">
-            <!-- Add content here if needed -->
+    <div class="container d-flex flex-column align-items-center justify-content-center min-vh-80">
+    <h1 class="text-center mb-4">Search User Data by IC</h1> <!-- Added mb-4 for spacing -->
+
+<!-- Existing search section -->
+<div class="search-section text-center mb-4"> <!-- Added mb-4 for spacing -->
+    <form method="POST" action="" class="d-flex justify-content-center align-items-center gap-2 w-100 mx-auto">
+        <div class="d-flex align-items-center">
+            <label for="search_ic" class="me-2 mb-0">Enter IC:</label>
+            <input type="text" id="search_ic" name="search_ic" pattern="\d{12,}" maxlength="12" required class="form-control text-center w-75">
         </div>
-    </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+</div>
 
-    <h1 class="text-center">Search User Data by IC</h1>
+<?php if (!empty($_SESSION['search_results'])): ?>
+    <h2 class="text-center mt-5">Search Results:</h2>
 
-    <div class="search-section text-center">
-        <form method="POST" action="" class="d-flex flex-column align-items-center">
-            <label for="search_ic" class="mb-2">Enter IC:</label>
-            <input type="text" id="search_ic" name="search_ic" pattern="\d{12,}" maxlength="20" required class="form-control text-center w-50">
-            <button type="submit" class="btn btn-primary mt-3">Search</button>
-        </form>
-    </div>
-
-    <?php if (!empty($_SESSION['search_results'])): ?>
-        <h2 class="text-center mt-4">Search Results:</h2>
-        <div class="table-responsive">
+    <div class="table-responsive">
         <table class="table table-bordered text-center">
-    <thead class="table-primary text-white">
-        <tr>
-            <th>Name</th>
-            <th>Masjid ID</th>
-            <th>IC</th>
-            <th>Phone</th>
-            <th>Address</th>
-            <th>Job</th>
-            <th>Total Vote</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($_SESSION['search_results'] as $row): ?>
-            <tr>
-                <td><?php echo htmlspecialchars($row['name']); ?></td>
-                <td><?php echo htmlspecialchars($row['masjid_id']); ?></td>
-                <td><?php echo htmlspecialchars($row['ic']); ?></td>
-                <td><?php echo htmlspecialchars($row['phone']); ?></td>
-                <td><?php echo htmlspecialchars($row['address']); ?></td>
-                <td><?php echo htmlspecialchars($row['job']); ?></td>
-                <td>
-                    <form method="POST" action="">
-                        <input type="hidden" name="ic" value="<?php echo htmlspecialchars($row['ic']); ?>">
-                        <input type="number" name="total_vote" min="1" value="<?php echo isset($row['total_vote']) ? htmlspecialchars($row['total_vote']) : '0'; ?>" required class="form-control w-50 mx-auto">
-                        <button type="submit" name="update_vote" class="btn btn-success btn-sm mt-2">Set Vote</button>
-                    </form>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
-        </div>
+            <thead class="table-primary text-white">
+                <tr>
+                    <th>Name</th>
+                    <th>Masjid ID</th>
+                    <th>IC</th>
+                    <th>Phone</th>
+                    <th>Address</th>
+                    <th>Job</th>
+                    <th>Total Vote</th>
+                        </thead>
+                    <tbody>
+                </tr>
+                <?php foreach ($_SESSION['search_results'] as $row): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($row['name']); ?></td>
+                        <td><?php echo htmlspecialchars($row['masjid_id']); ?></td>
+                        <td><?php echo htmlspecialchars($row['ic']); ?></td>
+                        <td><?php echo htmlspecialchars($row['phone']); ?></td>
+                        <td><?php echo htmlspecialchars($row['address']); ?></td>
+                        <td><?php echo htmlspecialchars($row['job']); ?></td>
+                        <td>
+                            <form method="POST" action="">
+                                <input type="hidden" name="ic" value="<?php echo htmlspecialchars($row['ic']); ?>">
+                                <input type="number" name="total_vote" min="1" value="<?php echo isset($row['total_vote']) ? htmlspecialchars($row['total_vote']) : '0'; ?>" required class="form-control w-50 mx-auto">
+                                <button type="submit" name="update_vote" class="btn btn-success btn-sm mt-2">Set Vote</button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
 
-        <form method="POST" action="db_insert_form.php" class="text-center">
-            <?php foreach ($_SESSION['search_results'] as $row): ?>
-                <input type="hidden" name="users[<?php echo $row['ic']; ?>][ic]" value="<?php echo $row['ic']; ?>">
-                <input type="hidden" name="users[<?php echo $row['ic']; ?>][name]" value="<?php echo $row['name']; ?>">
-                <input type="hidden" name="users[<?php echo $row['ic']; ?>][masjid_id]" value="<?php echo $row['masjid_id']; ?>">
-                <input type="hidden" name="users[<?php echo $row['ic']; ?>][phone]" value="<?php echo $row['phone']; ?>">
-                <input type="hidden" name="users[<?php echo $row['ic']; ?>][address]" value="<?php echo $row['address']; ?>">
-                <input type="hidden" name="users[<?php echo $row['ic']; ?>][job]" value="<?php echo $row['job']; ?>">
-                <input type="hidden" name="users[<?php echo $row['ic']; ?>][total_vote]" min="1" value="<?php echo isset($row['total_vote']) ? $row['total_vote'] : '0'; ?>" required>
-            <?php endforeach; ?>
-            <button type="submit" name="update_all" class="btn btn-warning mt-3">Save</button>
-        </form>
-    <?php else: ?>
-        <p class="text-center text-muted mt-4">No results found for the entered IC.</p>
-    <?php endif; ?>
+    <form method="POST" action="db_insert_form.php" class="text-center mt-5">
+        <?php foreach ($_SESSION['search_results'] as $row): ?>
+            <input type="hidden" name="users[<?php echo $row['ic']; ?>][ic]" value="<?php echo $row['ic']; ?>">
+            <input type="hidden" name="users[<?php echo $row['ic']; ?>][name]" value="<?php echo $row['name']; ?>">
+            <input type="hidden" name="users[<?php echo $row['ic']; ?>][masjid_id]" value="<?php echo $row['masjid_id']; ?>">
+            <input type="hidden" name="users[<?php echo $row['ic']; ?>][phone]" value="<?php echo $row['phone']; ?>">
+            <input type="hidden" name="users[<?php echo $row['ic']; ?>][address]" value="<?php echo $row['address']; ?>">
+            <input type="hidden" name="users[<?php echo $row['ic']; ?>][job]" value="<?php echo $row['job']; ?>">
+            <input type="hidden" name="users[<?php echo $row['ic']; ?>][total_vote]" min="1" value="<?php echo isset($row['total_vote']) ? $row['total_vote'] : '0'; ?>" required>
+        <?php endforeach; ?>
+        <button type="submit" name="update_all" class="btn btn-primary mt-4">Save</button>
+    </form>
+    </div>
+<?php else: ?>
+    <p class="text-center text-muted mt-4">No results found for the entered IC.</p>
+<?php endif; ?>
 
     <?php require '../include/footer.php'; ?>
 </div>

@@ -44,10 +44,10 @@ if (isset($_POST['login'])) {
                     header('Location: ../backend/mainpage.php');
                     break;
                 case 2:
-                    header('Location: ../frontend/mainpage2.html');
+                    header('Location: ../backend/mainpage2.php');
                     break;
                 case 3:
-                    header('Location: ../frontend/mainpage3.html');
+                    header('Location: ../backend/mainpage3.php');
                     break;
                 default:
                     header('Location: index.html');

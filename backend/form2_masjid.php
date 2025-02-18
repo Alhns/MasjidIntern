@@ -74,65 +74,10 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Form 2</title>
     <script type="text/javascript" src="../Script/ajax.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            text-align: center;
-            padding: 20px;
-        }
-        table {
-            width: 80%;
-            margin: auto;
-            border-collapse: collapse;
-            background: white;
-        }
-        th, td {
-            padding: 10px;
-            border: 1px solid #ddd;
-        }
-        th {
-            background: #007BFF;
-            color: white;
-        }
-        tr:nth-child(even) {
-            background: #f2f2f2;
-        }
-        select {
-            padding: 5px;
-            font-size: 14px;
-        }
-        .update-btn {
-            padding: 8px 12px;
-            font-size: 14px;
-            border: none;
-            background-color: #28a745;
-            color: white;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        .update-btn:hover {
-            background-color: #218838;
-        }
-        .back-btn {
-            margin-top: 20px;
-            padding: 10px 15px;
-            font-size: 16px;
-            border: none;
-            background-color: #dc3545;
-            color: white;
-            cursor: pointer;
-            border-radius: 5px;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .back-btn:hover {
-            background-color: #c82333;
-        }
-    </style>
 </head>
 <body>
 
+<?php require '../include/header.php'; ?>
     <!-- Show Alert Message (if any) -->
     <?php
     if (isset($_SESSION['message'])) {
@@ -147,18 +92,19 @@ try {
     ?>
 
     <h2>Booking List</h2>
-
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>Masjid</th>
-            <th>IC</th>
-            <th>Phone</th>
-            <th>Address</th>
-            <th>Job</th>
-            <th>Total Vote</th>
-            <th>Role</th>
-        </tr>
+    <div class="table-responsive">
+        <table class="table table-bordered text-center">
+            <thead class="table-primary text-white">
+                <tr>
+                    <th>Name</th>
+                    <th>Masjid</th>
+                    <th>IC</th>
+                    <th>Phone</th>
+                    <th>Address</th>
+                    <th>Job</th>
+                    <th>Total Vote</th>
+                    </thead>
+                    <tbody>
         <?php foreach ($bookings2 as $booking): ?>
             <tr>
                 <td><?php echo htmlspecialchars($booking['name']); ?></td>
@@ -168,18 +114,15 @@ try {
                 <td><?php echo htmlspecialchars($booking['address']); ?></td>
                 <td><?php echo htmlspecialchars($booking['job']); ?></td>
                 <td><?php echo htmlspecialchars($booking['total_vote']); ?></td>
-                <td>
-                <select name="role" onchange="updateRole(this, '<?php echo $booking['ic']; ?>')">
-                <option value="Pengerusi" <?php echo ($booking['role'] == 'Pengerusi') ? 'selected' : ''; ?>>Pengerusi</option>
-                <option value="Naib Pengerusi" <?php echo ($booking['role'] == 'Naib Pengerusi') ? 'selected' : ''; ?>>Naib Pengerusi</option>
-                <option value="Setiausaha" <?php echo ($booking['role'] == 'Setiausaha') ? 'selected' : ''; ?>>Setiausaha</option>
-                </select>
-                </td>
             </tr>
         <?php endforeach; ?>
     </table>
 
     <!-- Back to Main Page -->
-    <a href="../backend/mainpage.php" class="back-btn">Back to Main Page</a>
+    <div class="text-center mt-4">
+    <a href="../backend/mainpage.php" class="btn btn-primary">Back to Main Page</a>
+</div>
+
+    <?php require '../include/footer.php'; ?>
 </body>
 </html>

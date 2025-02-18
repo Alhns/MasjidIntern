@@ -72,94 +72,29 @@ $forms = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Main Page</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            margin: 0;
-        }
-        .header {
-            background-color: green;
-            padding: 10px;
-            color: white;
-            text-align: center;
-            position: relative;
-        }
-        .buttons-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-        button {
-            background-color: #007BFF;
-            color: white;
-            padding: 10px 20px;
-            font-size: 16px;
-            margin: 10px;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .logout-btn {
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            background-color: red;
-        }
-        .booking-table {
-            width: 80%;
-            margin: 20px auto;
-            border-collapse: collapse;
-            background: white;
-        }
-        .booking-table th, .booking-table td {
-            padding: 10px;
-            border: 1px solid #ddd;
-            text-align: center;
-        }
-        .booking-table th {
-            background: #007BFF;
-            color: white;
-        }
-        .booking-table tr:nth-child(even) {
-            background: #f2f2f2;
-        }
-        .cancel-btn {
-            padding: 5px 10px;
-            font-size: 14px;
-            border: none;
-            background-color: #dc3545;
-            color: white;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        .cancel-btn:hover {
-            background-color: #c82333;
-        }
-    </style>
 </head>
 <body>
     <?php require '../include/header.php'; ?>
 
-    <div class="buttons-container">
-        <button type="button" disabled>Mesyuarat Agung Tahunan</button>
-        <a href="../frontend/choosedate.html">
-            <button type="button">Mesyuarat Agung Pencalonan Jawatankuasa Kariah</button>
-        </a>
-        <a href="../backend/form1_masjid.php">
-            <button type="button">Form 1</button>
-        </a>
-        <a href="../backend/form2_masjid.php">
-            <button type="button">Form 2</button>
-        </a>
-    </div>
+    <div class="d-flex justify-content-center flex-wrap gap-3 text-center mt-4 mb-4">
+    <button type="button" class="btn btn-primary mb-2" disabled>Mesyuarat Agung Tahunan</button>
+    <a href="choosedate.php" class="mb-2">
+        <button type="button" class="btn btn-primary">Mesyuarat Agung Pencalonan Jawatankuasa Kariah</button>
+    </a>
+    <a href="../backend/form1_masjid.php" class="mb-2">
+        <button type="button" class="btn btn-primary">Form 1</button>
+    </a>
+    <a href="../backend/form2_masjid.php">
+        <button type="button" class="btn btn-primary">Form 2</button>
+    </a>
+</div>
+
 
     <h2 style="text-align: center; margin-top: 30px;">Your Booking Status</h2>
 
-    <table class="booking-table">
+    <div class="table-responsive">
+        <table class="table table-bordered text-center">
+            <thead class="table-primary text-white">
         <tr>
             <th>Booking ID</th>
             <th>Date</th>
@@ -168,6 +103,8 @@ $forms = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <th>Status</th>
             <th>Comment</th>
             <th>Action</th>
+            </thead>
+            <tbody>
         </tr>
         <?php if (empty($bookings)): ?>
             <tr><td colspan="7">No bookings found.</td></tr>
@@ -209,11 +146,11 @@ $forms = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <?php endforeach; ?>
         <?php endif; ?>
     </table>
-    <h1 style="text-align: center; margin-top: 30px;">Form 2 Status</h1>
+    <h2 style="text-align: center; margin-top: 30px;">Form 2 Status</h2>
     
     <?php if (!empty($forms)): ?>
-        <table class="booking-table">
-            <thead>
+        <table class="table table-bordered text-center">
+        <thead class="table-primary text-white">
                 <tr>
                 <th>No</th>
                 <th>Name</th>
@@ -227,9 +164,9 @@ $forms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <th>Verify Name 3</th>
                 <th>Role</th>
                 <th>Status</th>
+                </thead>
+                <tbody>
                 </tr>
-            </thead>
-            <tbody>
                 <?php
                 $counter = 1;
                 foreach ($forms as $form): 
