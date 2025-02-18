@@ -17,6 +17,7 @@ $masjid_id = $_SESSION['masjid_id'];
 // Include database connection
 require '../backend/connection.php';
 
+
 // Fetch bookings for the logged-in user
 try {
     $stmt = $conn->prepare("SELECT * FROM booking WHERE user_id = :user_id");
@@ -141,13 +142,7 @@ $forms = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </style>
 </head>
 <body>
-
-    <div class="header">
-        <h1>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></h1> 
-        <form action="../backend/logout.php" method="POST">
-            <button class="logout-btn" type="submit">Logout</button>
-        </form>
-    </div>
+    <?php require '../include/header.php'; ?>
 
     <div class="buttons-container">
         <button type="button" disabled>Mesyuarat Agung Tahunan</button>
@@ -267,5 +262,7 @@ $forms = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <p style="text-align: center; margin-top: 30px;">No results found for the selected date range.</p>
     <?php endif; ?>
 
+
+<?php require '../include/footer.php'; ?>
 </body>
 </html>
