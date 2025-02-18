@@ -7,7 +7,7 @@ $searchIC = '';
 if (!isset($_SESSION['search_results'])) {
     $_SESSION['search_results'] = [];
 }
-/*
+/*\\
 echo "<pre>Debug Search Results:";
 print_r($_SESSION['search_results']);
 echo "</pre>";
@@ -117,7 +117,7 @@ $updateKey = key($_POST['users']);
 $updateform = $_POST['users'][$updateKey]['form_id'] ?? $updateKey;
 
 
-//$newVote = intval($_POST['total_vote']);
+$newVote = intval($_POST['total_vote']);
 $newRole = $_POST['role']; // Get selected role
 
 // Debugging
@@ -131,7 +131,7 @@ echo "<pre>Debug New Role: " . $newRole . "</pre>";
 foreach ($_SESSION['search_results'] as &$user) {
     if ((isset($user['form_id']) && $user['form_id'] == $updateform) || 
         (isset($user['ic']) && $user['ic'] == $updateform)) {
-        //$user['total_vote'] = $newVote;
+        $user['total_vote'] = $newVote;
         $user['role'] = $newRole;
         break;
     }
@@ -147,29 +147,24 @@ foreach ($_SESSION['search_results'] as &$user) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Form 2 PTA</title>
+    <link rel="stylesheet" href="../Styles/styles2.css">
 </head>
 <body>
-<?php require '../include/header.php'; ?>
-    <div class="container d-flex flex-column align-items-center justify-content-center min-vh-80">
-    <h1 class="text-center mb-4">Search User Data by IC</h1> <!-- Added mb-4 for spacing -->
-
-<!-- Existing search section -->
-<div class="search-section text-center mb-4"> <!-- Added mb-4 for spacing -->
-    <form method="POST" action="" class="d-flex justify-content-center align-items-center gap-2 w-100 mx-auto">
-        <div class="d-flex align-items-center">
-            <label for="search_ic" class="me-2 mb-0">Enter IC:</label>
-            <input type="text" id="search_ic" name="search_ic" pattern="\d{12,}" maxlength="12" required class="form-control text-center w-75">
-        </div>
-        <button type="submit" class="btn btn-primary">Search</button>
-    </form>
-</div>
-
+    <h1>Search User Data by IC</h1>
+    
+    <div class="search-section">
+        <form method="POST" action="">
+            <label for="search_ic">Enter IC:</label>
+            <input type="text" id="search_ic" name="search_ic" pattern="\d{12,}" maxlength="20" required>
+            <button type="submit">Search</button>
+        </form>
+    </div>
 
     <?php 
     if (!empty($_SESSION['search_results'])): ?>
         <h2>Search Results:</h2>
-        <table class="table table-bordered text-center">
-        <thead class="table-primary text-white">
+            <table>
+                <thead>
                     <tr>
                         <th>No</th>
                         <th>Name</th>
@@ -180,9 +175,9 @@ foreach ($_SESSION['search_results'] as &$user) {
                         <th>Total Vote</th>
                         <th>Role</th>
                         <th>Action</th>
-                        </thead>
-                        <tbody>
                     </tr>
+                </thead>
+                <tbody>
 
                     <?php
                     $counter = 1; // Initialize counter
@@ -199,13 +194,13 @@ foreach ($_SESSION['search_results'] as &$user) {
     <td>
     <?php $key = isset($row['form_id']) ? $row['form_id'] : $row['ic']; ?>
     <input type="hidden" name="users[<?php echo $key; ?>][ic]" value="<?php echo htmlspecialchars($row['ic']); ?>">
-    <?php echo htmlspecialchars($row['total_vote']); ?></td>
+        <input type="number" name="total_vote" min="0" value="0" required>
     </td>
 <?php else: ?>
     <td>
     <?php $key = isset($row['form_id']) ? $row['form_id'] : $row['ic']; ?>
         <input type="hidden" name="users[<?php echo $key; ?>][ic]" value="<?php echo htmlspecialchars($row['ic']); ?>">
-        <?php echo htmlspecialchars($row['total_vote']); ?></td>
+        <input type="number" name="total_vote" min="0" value="<?php echo array_key_exists('total_vote', $row) ? htmlspecialchars($row['total_vote']) : '0'; ?>" required>
     </td>
 <?php endif; ?>
 
@@ -220,7 +215,7 @@ foreach ($_SESSION['search_results'] as &$user) {
     </td>
 
     <td>
-    <button type="submit" name="update_vote" class="btn btn-primary mb-2" value="1">Update Role</button>
+    <button type="submit" name="update_vote" value="1">Update Vote and Role</button>
     </form>
 </td>
 
@@ -243,14 +238,19 @@ foreach ($_SESSION['search_results'] as &$user) {
             <input type="hidden" name="users[<?php echo $key; ?>][role]" value="<?php echo isset($row['role']) ? htmlspecialchars($row['role']) : ''; ?>">
             <input type="hidden" name="users[<?php echo $key; ?>][total_vote]" value="<?php echo isset($row['total_vote']) ? htmlspecialchars($row['total_vote']) : '0'; ?>" required>
         <?php endforeach; ?>
-        <button type="submit" name="update_all" class="btn btn-primary mb-2">Save and Verify</button>
-        </form>
+        <button type="submit" name="update_all">Save and Verify</button>
+</form>
     <?php else: ?>
         <p>No results found for the entered date.</p>
     <?php endif; ?>
-    <div class="export-buttons text-center">
-    <button onclick="window.location.href = 'form_PTA.php'" class="btn btn-primary mb-2">Back</button>
-</div>
-    <?php require '../include/footer.php'; ?>
+    <div class="export-buttons">
+    <a href="form2_PTA_pdf.php" target="_blank">
+        <button type="button">Export to PDF</button>
+    </a>
+    <a href="form2_PTA_excel.php">
+    <button type="button">Export to Excel</button>
+</a>
+    <!-- Back Button without passing masjid_id -->
+    <button onclick="window.location.href = 'form_PTA.php'">Back</button>
 </body>
 </html>

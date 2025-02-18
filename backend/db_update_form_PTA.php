@@ -7,8 +7,6 @@ $currentDate = date('Y-m-d'); // Store only the date (YYYY-MM-DD)
 $level_id = $_SESSION['ulevel'];
 $user_id = $_SESSION['user_id'];
 
-
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
     if (isset($_POST['users']) && is_array($_POST['users'])) {
         echo "<pre style='color: blue;'>DEBUG: Received Data:</pre>";
@@ -80,6 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
                     $stmt->bindParam(':user_id', $verify1, PDO::PARAM_INT);
                     }
                   
+
                     $stmt->bindParam(':total_vote', $updatedVote, PDO::PARAM_INT);
                     $stmt->bindParam(':status_code', $status, PDO::PARAM_INT);
                     $stmt->bindParam(':form_id', $form_id, PDO::PARAM_INT);
@@ -129,15 +128,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
             // Clear session after successful insert/update
             $_SESSION['search_results'] = [];
 
-            // Redirect to another page after successful insertion
-            
-            if($level_id == 2){
-                header("Location: ../frontend/mainpage2.html"); 
+            // Redirect to meeting_PTA.php after successful insertion
+            header("Location: meeting_PTA.php"); 
             exit();
-            }
-            else{
-                header("Location: ../frontend/mainpage3.html"); 
-            }
 
         } catch (PDOException $e) {
             $conn->rollBack(); // Rollback on error

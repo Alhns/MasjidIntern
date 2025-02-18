@@ -52,10 +52,8 @@ foreach ($masjids as $masjid) {
 
     <div class="container">
         <?php foreach ($daerahMasjids as $daerahName => $masjids): ?>
-            <button class="daerah-button" onclick="toggleMasjidList('<?php echo htmlspecialchars($daerahName); ?>')">
-                <?php echo htmlspecialchars($daerahName); ?>
-            </button>
-            <div class="masjid-list" id="masjid-list-<?php echo htmlspecialchars($daerahName); ?>">
+            <div class="masjid-section">
+                <h2><?php echo htmlspecialchars($daerahName); ?></h2>
                 <ul>
                     <?php if (!empty($masjids)): ?>
                         <?php foreach ($masjids as $masjid): ?>

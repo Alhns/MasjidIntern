@@ -36,39 +36,42 @@ foreach ($masjids as $masjid) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Senarai Masjid Mengikut Daerah</title>
+    <link rel="stylesheet" href="../Styles/styles.css">
     <script src="<?php echo '../Script/dropdown_pta.js'; ?>"></script>
 </head>
-<body class="bg-light">
+<body>
 
-<?php require '../include/header.php'; ?>
-        
-        <?php foreach ($daerahMasjids as $daerahName => $masjids): ?>
-            <div class="mb-3">
-                <button class="btn btn-primary w-100 mt-2 text-start" onclick="toggleMasjidList('<?php echo htmlspecialchars($daerahName); ?>')">
-                    <?php echo htmlspecialchars($daerahName); ?>
-                </button>
-                <div class="masjid-list" id="masjid-list-<?php echo htmlspecialchars($daerahName); ?>" style="display: none;">
-                    <ul class="list-group mt-2">
-                        <?php if (!empty($masjids)): ?>
-                            <?php foreach ($masjids as $masjid): ?>
-                                <li class="list-group-item list-group-item-action" onclick="openFormSelection('<?php echo htmlspecialchars($masjid['masjid_name']); ?>')">
-                                    <?php echo htmlspecialchars($masjid['masjid_id'] . " - " . $masjid['masjid_name']); ?>
-                                </li>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <li class="list-group-item">No masjid available</li>
-                        <?php endif; ?>
-                    </ul>
-                </div>
-            </div>
-        <?php endforeach; ?>
-
-        <!-- Back Button -->
-        <div class="text-center mt-4">
-            <a href="../frontend/mainpage3.html" class="btn btn-secondary"> Back to Main Page</a>
-        </div>
+    <div class="header">
+        <h1>Senarai Masjid Mengikut Daerah</h1>
     </div>
 
-    <?php require '../include/footer.php'; ?>
+    <div class="container">
+        <?php foreach ($daerahMasjids as $daerahName => $masjids): ?>
+            <button class="daerah-button" onclick="toggleMasjidList('<?php echo htmlspecialchars($daerahName); ?>')">
+                <?php echo htmlspecialchars($daerahName); ?>
+            </button>
+            <div class="masjid-list" id="masjid-list-<?php echo htmlspecialchars($daerahName); ?>">
+                <ul>
+                    <?php if (!empty($masjids)): ?>
+                        <?php foreach ($masjids as $masjid): ?>
+                            <li onclick="openFormSelection('<?php echo htmlspecialchars($masjid['masjid_name']); ?>')">
+                            <?php echo htmlspecialchars($masjid['masjid_id'] . " - " . $masjid['masjid_name']); ?>
+                        </li>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <li>No masjid available</li>
+                    <?php endif; ?>
+                </ul>
+            </div>
+        <?php endforeach; ?>
+    </div>
+    <!-- Back Button -->
+    <div class="back-button-container" style="text-align: center; margin-top: 20px;">
+        <a href="../frontend/mainpage3.html" style="text-decoration: none;">
+            <button style="padding: 10px 20px; font-size: 16px; background-color: #007bff; color: white; border: none; cursor: pointer; border-radius: 5px;">
+                ⬅ Back to Main Page
+            </button>
+        </a>
+    </div>
 </body>
 </html>
