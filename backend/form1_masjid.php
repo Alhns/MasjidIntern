@@ -119,86 +119,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search User Data by IC</title>
-    <style>
-    body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            text-align: center;
-            padding: 20px;
-        }
-        table {
-            width: 80%;
-            margin: auto;
-            border-collapse: collapse;
-            background: white;
-        }
-        th, td {
-            padding: 10px;
-            border: 1px solid #ddd;
-        }
-        th {
-            background: #007BFF;
-            color: white;
-        }
-        tr:nth-child(even) {
-            background: #f2f2f2;
-        }
-        select {
-            padding: 5px;
-            font-size: 14px;
-        }
-        .update-btn {
-            padding: 8px 12px;
-            font-size: 14px;
-            border: none;
-            background-color: #28a745;
-            color: white;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        .update-btn:hover {
-            background-color: #218838;
-        }
-        .back-btn {
-            margin-top: 20px;
-            padding: 10px 15px;
-            font-size: 16px;
-            border: none;
-            background-color: #dc3545;
-            color: white;
-            cursor: pointer;
-            border-radius: 5px;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .back-btn:hover {
-            background-color: #c82333;
-        }   
-        button {
-            background-color: #007BFF;
-            color: white;
-            padding: 10px 20px;
-            font-size: 16px;
-            margin: 10px;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-    </style>
 </head>
 <body>
     <h1>Search User Data by IC</h1>
     
-    <div class="search-section">
-        <form method="POST" action="">
-            <label for="search_ic">Enter IC:</label>
-            <input type="text" id="search_ic" name="search_ic" pattern="\d{12,}" maxlength="20" required>
-            <button type="submit">Search</button>
-        </form>
-    </div>
+    <div class="container d-flex flex-column align-items-center justify-content-center min-vh-80">
+    <h1 class="text-center mb-4">Search User Data by IC</h1> <!-- Added mb-4 for spacing -->
+
+<!-- Existing search section -->
+<div class="search-section text-center mb-4"> <!-- Added mb-4 for spacing -->
+    <form method="POST" action="" class="d-flex justify-content-center align-items-center gap-2 w-100 mx-auto">
+        <div class="d-flex align-items-center">
+            <label for="search_ic" class="me-2 mb-0">Enter IC:</label>
+            <input type="text" id="search_ic" name="search_ic" pattern="\d{12,}" maxlength="12" required class="form-control text-center w-75">
+        </div>
 
     <?php if (!empty($_SESSION['search_results'])): ?>
         <h2>Search Results:</h2>

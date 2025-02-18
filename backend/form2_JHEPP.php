@@ -166,7 +166,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
                         <th>Job</th>
                         <th>Total Vote</th>
                         <th>Role</th>
-                        <th>Action</th>
+                        <th>Action</th>w
                         <?php if ($level_id == 4): ?>
                 <th>Accept / Reject</th>
             <?php endif; ?>
