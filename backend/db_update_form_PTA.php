@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
                     if($level_id == 2){
                         $stmt = $conn->prepare("
                         UPDATE form 
-                        SET total_vote = :total_vote, status_code = :status_code, verify_id_1 = :user_id
+                        SET total_vote = :total_vote, status_code = :status_code, verify_id_1 = :user_id, role = :role
                         WHERE form_id = :form_id
                     ");
                     $stmt->bindParam(':user_id', $verify1, PDO::PARAM_INT);
@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
                     elseif($level_id == 3){
                         $stmt = $conn->prepare("
                         UPDATE form 
-                        SET total_vote = :total_vote, status_code = :status_code, verify_id_2 = :user_id
+                        SET total_vote = :total_vote, status_code = :status_code, verify_id_2 = :user_id, role = :role
                         WHERE form_id = :form_id
                     ");
                     $stmt->bindParam(':user_id', $verify1, PDO::PARAM_INT);
@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
                     else{
                         $stmt = $conn->prepare("
                         UPDATE form 
-                        SET total_vote = :total_vote, status_code = :status_code, verify_id_3 = :user_id
+                        SET total_vote = :total_vote, status_code = :status_code, verify_id_3 = :user_id, role = :role
                         WHERE form_id = :form_id
                     ");
                     $stmt->bindParam(':user_id', $verify1, PDO::PARAM_INT);
@@ -83,6 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_all'])) {
                     $stmt->bindParam(':total_vote', $updatedVote, PDO::PARAM_INT);
                     $stmt->bindParam(':status_code', $status, PDO::PARAM_INT);
                     $stmt->bindParam(':form_id', $form_id, PDO::PARAM_INT);
+                    $stmt->bindParam(':role', $role, PDO::PARAM_STR);
                     $stmt->execute();
                 } else {
                     // If no record exists, insert a new entry

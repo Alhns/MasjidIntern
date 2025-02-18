@@ -230,6 +230,7 @@ $forms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <th>Verify Name 1</th>
                 <th>Verify Name 2</th>
                 <th>Verify Name 3</th>
+                <th>Role</th>
                 <th>Status</th>
                 </tr>
             </thead>
@@ -256,6 +257,7 @@ $forms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <td><?php echo htmlspecialchars($form['verify_name_1']); ?></td>
                     <td><?php echo htmlspecialchars($form['verify_name_2']); ?></td>
                     <td><?php echo htmlspecialchars($form['verify_name_3']); ?></td>
+                    <td><?php echo htmlspecialchars($form['role']); ?></td>
                     <td><?php echo $statusText; ?></td>
                     </tr>
                 <?php endforeach; ?>

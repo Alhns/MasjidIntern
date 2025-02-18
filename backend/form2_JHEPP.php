@@ -7,11 +7,11 @@ $searchIC = '';
 if (!isset($_SESSION['search_results'])) {
     $_SESSION['search_results'] = [];
 }
-/*
+
 echo "<pre>Debug Search Results:";
 print_r($_SESSION['search_results']);
 echo "</pre>";
-*/
+
 
 // Retrieve masjid_id from URL
 $masjid_id = isset($_GET['masjid_id']) ? intval($_GET['masjid_id']) : null;
