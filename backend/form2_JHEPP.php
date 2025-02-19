@@ -161,6 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
                     <tr>
                         <th>No</th>
                         <th>Name</th>
+                        <th>Form ID</th>
                         <th>IC</th>
                         <th>Phone Number</th>
                         <th>Address</th>
@@ -178,6 +179,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_vote'])) {
                         <tr>
                         <td><?php echo $counter++; ?></td>
                             <td><?php echo htmlspecialchars($row['name']); ?></td>
+                            <td><?php echo htmlspecialchars($row['form_id']); ?></td>
                             <td><?php echo htmlspecialchars($row['ic']); ?></td>
                             <td><?php echo htmlspecialchars($row['phone']); ?></td>
                             <td><?php echo htmlspecialchars($row['address']); ?></td>

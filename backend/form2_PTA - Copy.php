@@ -174,6 +174,7 @@ foreach ($_SESSION['search_results'] as &$user) {
                     <tr>
                         <th>No</th>
                         <th>Name</th>
+                        <th>Form ID</th>
                         <th>IC</th>
                         <th>Phone</th>
                         <th>Address</th>
@@ -191,6 +192,7 @@ foreach ($_SESSION['search_results'] as &$user) {
                         <tr>
                         <td><?php echo $counter++; ?></td>
                             <td><?php echo htmlspecialchars($row['name']); ?></td>
+                            <td><?php echo htmlspecialchars($row['form_id']); ?></td>
                             <td><?php echo htmlspecialchars($row['ic']); ?></td>
                             <td><?php echo htmlspecialchars($row['phone']); ?></td>
                             <td><?php echo htmlspecialchars($row['address']); ?></td>
