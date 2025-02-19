@@ -12,14 +12,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     $time = $_POST['time'];
     $place = $_POST['place'];
     $status_code = 'pending';
+    $masjid_id = $_SESSION['masjid_id'];
 
     try {
-        $stmt = $conn->prepare("INSERT INTO booking (user_id, date, time, place, status_code) VALUES (:user_id, :date, :time, :place, :status_code)");
+        $stmt = $conn->prepare("INSERT INTO booking (user_id, date, time, place, status_code, masjid_id) VALUES (:user_id, :date, :time, :place, :status_code, :masjid_id)");
         $stmt->bindParam(':user_id', $user_id);
         $stmt->bindParam(':date', $date);
         $stmt->bindParam(':time', $time);
         $stmt->bindParam(':place', $place);
         $stmt->bindParam(':status_code', $status_code);
+        $stmt->bindParam(':masjid_id', $masjid_id);
+        
         $stmt->execute();
 
         $_SESSION['message'] = "Booking request submitted successfully!";

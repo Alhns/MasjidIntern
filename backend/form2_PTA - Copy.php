@@ -192,7 +192,7 @@ foreach ($_SESSION['search_results'] as &$user) {
                         <tr>
                         <td><?php echo $counter++; ?></td>
                             <td><?php echo htmlspecialchars($row['name']); ?></td>
-                            <td><?php echo htmlspecialchars($row['form_id']); ?></td>
+                            <td><?php echo isset($row['form_id']) && !empty($row['form_id']) ? htmlspecialchars($row['form_id']) : 'Not determined yet'; ?></td>
                             <td><?php echo htmlspecialchars($row['ic']); ?></td>
                             <td><?php echo htmlspecialchars($row['phone']); ?></td>
                             <td><?php echo htmlspecialchars($row['address']); ?></td>

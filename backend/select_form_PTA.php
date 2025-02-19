@@ -31,7 +31,7 @@ try {
         FROM masjid m
         LEFT JOIN user u ON u.masjid_id = m.masjid_id
         LEFT JOIN form f ON f.ic = u.ic AND f.date BETWEEN ? AND ?
-        WHERE m.masjid_name = ? AND f.status_code > 2
+        WHERE m.masjid_name = ?
         GROUP BY m.masjid_id");
     }
 

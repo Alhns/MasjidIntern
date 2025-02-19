@@ -1,22 +1,11 @@
 <?php
 session_start();
-include('../backend/connection.php'); // Include database connection
+include('../backend/connection.php');
 
-try {
-    // Retrieve all distinct form IDs
-    $stmtForms = $conn->prepare("SELECT DISTINCT form_id FROM meeting ORDER BY form_id ASC");
-    $stmtForms->execute();
-    $forms = $stmtForms->fetchAll(PDO::FETCH_ASSOC);
-
-    // Default SQL query (show all meetings)
-    $sql = "SELECT meeting_date, meeting_time, meeting_place, form_id, meeting_part FROM meeting ORDER BY meeting_date DESC";
-    $stmtMeetings = $conn->prepare($sql);
-    $stmtMeetings->execute();
-    $meetings = $stmtMeetings->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    echo "<script>alert('Database error: " . htmlspecialchars($e->getMessage()) . "'); window.history.back();</script>";
-    exit;
-}
+// Fetch all daerahs
+$stmtDaerah = $conn->prepare("SELECT daerah_id, daerah_name FROM daerah ORDER BY daerah_name ASC");
+$stmtDaerah->execute();
+$daerahs = $stmtDaerah->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -25,82 +14,92 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meeting History</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 
 <?php require '../include/header.php'; ?>
 
-<div class="container">
-<div class="text-center">
-<h2>Meeting History</h2>
-
-<!-- Dropdown to filter by form_id -->
-<label for="formFilter" class="form-label">Filter by Form ID:</label>
-<select id="formFilter" class="form-select">
-    <option value="">Show All</option>
-    <?php foreach ($forms as $form): ?>
-        <option value="<?php echo htmlspecialchars($form['form_id']); ?>">
-            <?php echo htmlspecialchars($form['form_id']); ?>
-        </option>
-    <?php endforeach; ?>
-</select>
-</div>
-   
-
-    <!-- Meeting Table -->
-    <div id="meetingTable">
-    <table class="table table-bordered text-center">
-    <thead class="table-primary text-white">
-                <tr>
-                    <th>Meeting Date</th>
-                    <th>Meeting Time</th>
-                    <th>Meeting Place</th>
-                    <th>Form ID</th>
-                    <th>Participants</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if ($meetings): ?>
-                    <?php foreach ($meetings as $meeting): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($meeting['meeting_date']); ?></td>
-                            <td><?php echo date('H:i', strtotime($meeting['meeting_time'])); ?></td>
-                            <td><?php echo htmlspecialchars($meeting['meeting_place']); ?></td>
-                            <td><?php echo htmlspecialchars($meeting['form_id']); ?></td>
-                            <td><?php echo htmlspecialchars($meeting['meeting_part']); ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="5">No meeting history available.</td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
+<div class="container mt-4">
+    <div class="text-center">
+        <h2>Meeting History</h2>
     </div>
 
-    <div class="text-center">
-    <button onclick="window.location.href = 'form_JHEPP.php'" class="btn btn-primary mb-2">Back</button>
-</div>
+    <!-- Filter Form -->
+    <form id="filterForm" class="mb-3">
+        <div class="row">
+            <div class="col-md-5">
+                <label for="daerah" class="form-label">Select Daerah:</label>
+                <select id="daerah" name="daerah_id" class="form-select">
+                    <option value="">All Daerah</option>
+                    <?php foreach ($daerahs as $daerah): ?>
+                        <option value="<?= htmlspecialchars($daerah['daerah_id']) ?>"><?= htmlspecialchars($daerah['daerah_name']) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="col-md-5">
+                <label for="masjid" class="form-label">Select Masjid:</label>
+                <select id="masjid" name="masjid_id" class="form-select">
+                    <option value="">All Masjid</option>
+                </select>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">Filter</button>
+            </div>
+        </div>
+    </form>
 
+    <!-- Meeting Table (Loaded via AJAX) -->
+    <div id="meetingResults"></div>
+
+    <div class="text-center">
+        <button onclick="window.location.href = 'form_JHEPP.php'" class="btn btn-secondary">Back</button>
+    </div>
 </div>
 
 <?php require '../include/footer.php'; ?>
 
 <script>
-$(document).ready(function() {
-    $("#formFilter").change(function() {
-        var formId = $(this).val(); // Get selected form_id
+$(document).ready(function () {
+    // Load initial meetings
+    loadMeetings();
+
+    // When daerah is selected, update masjid dropdown
+    $('#daerah').change(function () {
+        var daerah_id = $(this).val();
+        $('#masjid').html('<option value="">All Masjid</option>');
+
+        if (daerah_id) {
+            $.ajax({
+                url: 'fetch_masjid.php',
+                type: 'GET',
+                data: { daerah_id: daerah_id },
+                success: function (response) {
+                    $('#masjid').append(response);
+                }
+            });
+        }
+    });
+
+    // When filter form is submitted
+    $('#filterForm').submit(function (event) {
+        event.preventDefault();
+        loadMeetings();
+    });
+
+    function loadMeetings() {
+        var formData = $('#filterForm').serialize();
 
         $.ajax({
-            url: "fetch_meetings.php", // Fetch data dynamically
-            type: "POST",
-            data: { form_id: formId },
-            success: function(response) {
-                $("#meetingTable").html(response); // Update table dynamically
+            url: 'fetch_meetings.php',
+            type: 'GET',
+            data: formData,
+            success: function (response) {
+                $('#meetingResults').html(response);
             }
         });
-    });
+    }
 });
 </script>
 

@@ -23,7 +23,7 @@ include('connection.php');
 <div class="container mt-5">
         <div class="card form-card mx-auto" style="max-width: 500px;">
             <h2 class="text-center mb-4">Choose Date for Meeting</h2>
-            <form action="../backend/choosedate.php" method="POST">
+            <form action="../backend/db_choosedate.php" method="POST">
                 <div class="mb-3">
                     <label for="date" class="form-label">Select Date:</label>
                     <input type="date" id="date" name="date" class="form-control" required>

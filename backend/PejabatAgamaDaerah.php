@@ -5,9 +5,10 @@ require '../backend/connection.php'; // Adjust path if needed
 // Fetch all booking records with masjid_name
 try {
     $stmt = $conn->prepare("
-        SELECT b.*, m.masjid_name 
+        SELECT b.*, m.masjid_name, u.name
         FROM booking b
         JOIN masjid m ON b.masjid_id = m.masjid_id
+        JOIN user u on u.user_id = b.user_id
     ");
     $stmt->execute();
     $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -48,7 +49,7 @@ try {
     <thead class="table-primary text-white">
     <tr>
         <th>Booking ID</th>
-        <th>User ID</th>
+        <th>Name</th>
         <th>Original Date</th>
         <th>Adjusted Date</th>
         <th>Original Time</th>
@@ -63,7 +64,7 @@ try {
     <?php foreach ($bookings as $booking): ?>
         <tr>
             <td><?php echo htmlspecialchars($booking['booking_id']); ?></td>
-            <td><?php echo htmlspecialchars($booking['user_id']); ?></td>
+            <td><?php echo htmlspecialchars($booking['name']); ?></td>
             <td><?php echo htmlspecialchars($booking['date']); ?></td>
             <td>
                 <form action="updatestatus.php" method="POST">
